@@ -48,7 +48,7 @@ Window::Window(int width, int height, const char* title) : width(width), height(
         NULL,       // Parent window    
         NULL,       // Menu
         WindowClass::GetInstance(),  // Instance handle
-        NULL        // Additional application data
+        this        // Additional application data
     );
 
     if (hWnd == NULL)

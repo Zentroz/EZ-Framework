@@ -24,7 +24,6 @@ public:
 	Window(int width, int height, const char* title);
 	~Window();
 
-	//bool Initialize();
 	void Run();
 	void Shutdown();
 	HWND GetHwnd() const noexcept { return hWnd; }

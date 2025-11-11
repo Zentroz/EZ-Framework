@@ -1,5 +1,7 @@
 #include"Input.h"
 
+#include"ChiliWin.h"
+
 void Input::KeyDown(unsigned char keycode) noexcept {
 	m_keyStates.set(keycode);
 }

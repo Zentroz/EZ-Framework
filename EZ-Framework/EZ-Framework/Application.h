@@ -3,6 +3,7 @@
 
 #include"Window.h"
 #include"Time.h"
+#include"Renderer.h"
 
 class Application {
 public:
@@ -12,8 +13,10 @@ public:
 	void Run();
 
 private:
+	Input input;
 	Window window;
 	Time time;
+	Renderer renderer;
 };
 
 #endif
