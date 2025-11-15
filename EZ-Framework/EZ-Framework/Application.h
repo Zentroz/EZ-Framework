@@ -4,6 +4,8 @@
 #include"Window.h"
 #include"Time.h"
 #include"Renderer.h"
+#include"Registry.h"
+#include"ScriptManager.h"
 
 class Application {
 public:
@@ -17,6 +19,8 @@ private:
 	Window window;
 	Time time;
 	Renderer renderer;
+	Registry registry;
+	ScriptManager scriptManager;
 };
 
 #endif

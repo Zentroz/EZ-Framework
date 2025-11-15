@@ -9,6 +9,6 @@ void Input::KeyUp(unsigned char keycode) noexcept {
 	m_keyStates.reset(keycode);
 }
 
-bool Input::GetKey(unsigned char keycode) const noexcept {
+bool Input::GetKey(KeyCode keycode) const noexcept {
 	return m_keyStates.test(keycode);
 }
