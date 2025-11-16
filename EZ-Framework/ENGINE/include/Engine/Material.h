@@ -10,6 +10,7 @@
 
 class Material {
 public:
+	Material() = default;
 	Material(Shader* shader);
 
 	void SetFloat(const std::string& name, float value);
@@ -18,6 +19,8 @@ public:
 	void ReflectShaderVariables();
 	void Upload(ID3D11DeviceContext* context);
 	void Bind(ID3D11DeviceContext* context);
+
+	Shader* GetShader() { return shader;}
 
 private:
 	struct ShaderVariable {

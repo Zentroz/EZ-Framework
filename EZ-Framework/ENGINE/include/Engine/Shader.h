@@ -10,6 +10,7 @@
 
 class Shader {
 public:
+	Shader() = default;
 	Shader(const char* name, const char* vertexEntryPoint = "VSMain", const char* pixelEntryPoint = "PSMain") noexcept;
 
 	void CompileFromFile(const char* filePath, ID3D11Device* device);
@@ -19,6 +20,9 @@ public:
 
 	ID3DBlob* GetVertexShaderBlob() const;
 	ID3DBlob* GetPixelShaderBlob() const;
+
+	ID3D11VertexShader* GetVertexShader() const { return vertexShader.Get(); }
+	ID3D11PixelShader* GetPixelShader() const { return pixelShader.Get(); }
 
 private:
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;

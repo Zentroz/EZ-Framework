@@ -1,30 +1,31 @@
 #include"Engine/Engine.h"
 
+Engine::Engine() {
+}
+
 void Engine::Init(int width, int height, const char* title) {
-	window.Init(width, height, title);
-	renderer.Init(window.GetHwnd());
-
-	Entity a = registry.CreateEntity();
-
-	ScriptComponent* script = new ScriptComponent("Scripts/test.lua");
-
-	//registry.AddComponent<ScriptComponent>(b, script);
-
-	scriptManager.Init(window.GetInput(), &registry, &renderer.GetCamera());
-	scriptManager.Start(&registry);
-	sqrt(360);
+	backend.Init(width, height, title);
+	renderer.Init(backend.GetDevice(), backend.GetRenderContext());
 }
 
 void Engine::Shutdown() {
 	renderer.Shutdown();
-	window.Shutdown();
+	backend.Shutdown();
 }
 
 void Engine::Frame() {
-	while (window.isRunning) {
+	bool run = true;
+
+	while (run) {
 		time.Update();
-		window.Run();
-		scriptManager.Update(&registry);
+		run = backend.Run();
+
+		renderer.InitRender(backend.GetMainRenderTarget());
 		renderer.Render();
+		renderer.EndRender();
+
+		backend.PresentFrame();
+
+		if (run == false) break;
 	}
 }

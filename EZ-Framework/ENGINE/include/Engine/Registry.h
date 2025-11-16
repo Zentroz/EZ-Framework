@@ -11,8 +11,12 @@ public:
 
 	Entity CreateEntity();
 	void DestroyEntity(Entity entity);
+	std::vector<Entity> GetEntitiesWithComponent(ComponentType types[], int length);
 
-	Entity* GetEntitiesWithComponent(ComponentType types[]);
+	template<typename T>
+	ComponentType GetComponentType() {
+		return componentManager.GetComponentType<T>();
+	}
 
 	template<typename T>
 	std::vector<T*> GetAllComponentsOfType() {

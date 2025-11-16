@@ -13,17 +13,27 @@ void Registry::DestroyEntity(Entity entity) {
 	entityManager.DestroyEntity(entity);
 }
 
-Entity* Registry::GetEntitiesWithComponent(ComponentType types[]) {
-	//int length = sizeof(types) / sizeof(types[0]);
+std::vector<Entity> Registry::GetEntitiesWithComponent(ComponentType types[], int length) {
 
-	//for (size_t i = 0; i < MAX_ENTITIES; i++)
-	//{
-	//	for (unsigned int i = 0; i < length; i++) {
-	//		ComponentType type = types[i];
+	std::vector<Entity> entities = {};
 
-	//		entitymana
-	//	}
-	//}
+	for (size_t i = 0; i < MAX_ENTITIES; i++)
+	{
+		if (!entityManager.IsEntityAlive(i)) continue;
 
-	return nullptr;
+		bool hasAllComponents = true;
+
+		for (unsigned int i = 0; i < length; i++) {
+			ComponentType type = types[i];
+
+			if (!componentManager.HasComponent(i, type)) {
+				hasAllComponents = false;
+				break;
+			}
+		}
+
+		if (hasAllComponents) entities.push_back(i);
+	}
+
+	return entities;
 }

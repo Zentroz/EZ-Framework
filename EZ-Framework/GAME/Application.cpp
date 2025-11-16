@@ -1,6 +1,6 @@
 #include"Application.h"
 
-Application::Application(int width, int height, const char* title) {
+Application::Application(int width, int height, const char* title) : engine() {
 	engine.Init(width, height, title);
 }
 

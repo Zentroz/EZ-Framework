@@ -77,7 +77,4 @@ void Shader::ReleaseBlobs() {
 
 void Shader::Bind(ID3D11DeviceContext* context) {
 	context->IASetInputLayout(inputLayout.Get());
-
-	context->VSSetShader(vertexShader.Get(), nullptr, 0);
-	context->PSSetShader(pixelShader.Get(), nullptr, 0);
 }

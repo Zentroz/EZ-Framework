@@ -1,27 +1,27 @@
 #include"Engine/Renderer.h"
 
-Renderer::Renderer() : testMesh("Mesh/monkey.obj", "test"), testShader("test"), testMaterial(&testShader) {
-	OutputDebugStringA("Renderer created\n");
-}
+Renderer::Renderer() {}
 
-void Renderer::Init(HWND hWnd) {
-	graphics.Init(hWnd);
+void Renderer::Init(ID3D11Device* device, RenderContext* ctx) {
+	this->ctx = ctx;
 
-	testMesh.CreateBuffers(graphics.GetDevice());
-	testShader.CompileFromFile("Shaders/default.hlsl", graphics.GetDevice());
+	//testMesh = *(new Mesh("Mesh/monkey.obj", "Monkey"));
 
-	testMaterial.ReflectShaderVariables();
-	CreateGlobalBuffer();
+	//testMesh.CreateBuffers(graphics.GetDevice());
+	//testShader.CompileFromFile("Shaders/default.hlsl", graphics.GetDevice());
 
-	testMaterial.CreateMaterialBuffer(graphics.GetDevice());
+	//testMaterial.ReflectShaderVariables();
+	//CreateGlobalBuffer();
 
-	testMaterial.SetFloat("test", 0.5f);
+	//testMaterial.CreateMaterialBuffer(graphics.GetDevice());
 
-	testMaterial.Upload(graphics.GetContext());
+	//testMaterial.SetFloat("test", 0.5f);
+
+	//testMaterial.Upload(graphics.GetContext());
 }
 
 void Renderer::Shutdown() {
-	graphics.Shutdown();
+	//graphics.Shutdown();
 }
 
 void Renderer::CreateGlobalBuffer() {
@@ -33,7 +33,7 @@ void Renderer::CreateGlobalBuffer() {
 	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	cbd.CPUAccessFlags = 0;
 
-	hr = graphics.GetDevice()->CreateBuffer(&cbd, nullptr, &globalBuffer);
+	//hr = graphics.GetDevice()->CreateBuffer(&cbd, nullptr, &globalBuffer);
 }
 
 void Renderer::SetGlobalBuffers() {
@@ -54,27 +54,19 @@ void Renderer::SetGlobalBuffers() {
 	cbData.deltaTime = Time::deltaTime;
 	cbData.time = Time::time;
 
-	graphics.GetContext()->UpdateSubresource(globalBuffer, 0, nullptr, &cbData, 0, 0);
+	ctx->SetConstantBuffer(globalBuffer, &cbData);
+}
+
+void Renderer::InitRender(RenderTarget* mainRenderTarget) {
+	ctx->ClearRenderTarget(mainRenderTarget->GetRTV(), float4(0.15f, 0.15f, 0.3f, 1.0f));
+
+	ctx->SetRenderTarget(mainRenderTarget->GetRTV());
 }
 
 void Renderer::Render() {
-	graphics.InitFrame();
-
-	SetGlobalBuffers();
-
-	testMaterial.Upload(graphics.GetContext());
-	testMaterial.Bind(graphics.GetContext());
-
-	testMesh.Bind(graphics.GetContext());
-
-	graphics.GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	testShader.Bind(graphics.GetContext());
-
-	graphics.GetContext()->VSSetConstantBuffers(0, 1, &globalBuffer);
-	graphics.GetContext()->PSSetConstantBuffers(0, 1, &globalBuffer);
-
-	graphics.GetContext()->DrawIndexed(testMesh.GetIndexCount(), 0, 0);
-
-	graphics.PresentFrame();
+	// Draw calls here
+}
+void Renderer::EndRender() {
+	ctx->SetRenderTarget(nullptr);
+	//ctx->SetShaderResource(nullptr, 1);
 }

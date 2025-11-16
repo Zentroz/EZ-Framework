@@ -13,6 +13,8 @@ public:
 	Entity CreateEntity();
 	void DestroyEntity(Entity entity);
 
+	bool IsEntityAlive(Entity entity) const;
+
 private:
 	std::bitset<MAX_ENTITIES> m_entities{};
 	unsigned int entitiesAlive;

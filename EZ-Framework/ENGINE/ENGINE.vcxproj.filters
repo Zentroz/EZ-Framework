@@ -31,12 +31,21 @@
     <Filter Include="Source Files\Scripting">
       <UniqueIdentifier>{b9b3175e-f0d8-4ffb-ac6c-5a54f4cc2cc6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Render\Backend">
+      <UniqueIdentifier>{bac6fde8-c59d-4167-bf07-e59271052bf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render\Backend">
+      <UniqueIdentifier>{124dfaaa-a684-4cf5-a0df-37de7df6ea44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Render\Frontend">
+      <UniqueIdentifier>{81ce63b7-4715-4edd-8911-76818a9cbce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render\Frontend">
+      <UniqueIdentifier>{b027c43a-7d4b-48a1-a7b7-6dc9124d7da2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Engine\Input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Engine\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Engine\ResourceManager.h">
@@ -44,24 +53,6 @@
     </ClInclude>
     <ClInclude Include="include\Engine\Window.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Engine\Graphics.h">
-      <Filter>Header Files\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Engine\Mesh.h">
-      <Filter>Header Files\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Engine\Renderer.h">
-      <Filter>Header Files\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Engine\Shader.h">
-      <Filter>Header Files\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Engine\Material.h">
-      <Filter>Header Files\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Engine\Camera.h">
-      <Filter>Header Files\Render</Filter>
     </ClInclude>
     <ClInclude Include="include\Engine\EntityManager.h">
       <Filter>Header Files\ECS</Filter>
@@ -87,6 +78,36 @@
     <ClInclude Include="include\Engine\Engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Engine\GraphicsDevice.h">
+      <Filter>Header Files\Render\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\EngineBackend.h">
+      <Filter>Header Files\Render\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\Camera.h">
+      <Filter>Header Files\Render\Frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\Graphics.h">
+      <Filter>Header Files\Render\Frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\Material.h">
+      <Filter>Header Files\Render\Frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\Mesh.h">
+      <Filter>Header Files\Render\Frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\Renderer.h">
+      <Filter>Header Files\Render\Frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\Shader.h">
+      <Filter>Header Files\Render\Frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\RenderContext.h">
+      <Filter>Header Files\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\RenderTarget.h">
+      <Filter>Header Files\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Window.cpp">
@@ -101,21 +122,6 @@
     <ClCompile Include="Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
     <ClCompile Include="EntityManager.cpp">
       <Filter>Source Files\ECS</Filter>
     </ClCompile>
@@ -125,14 +131,41 @@
     <ClCompile Include="Registry.cpp">
       <Filter>Source Files\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files\Render</Filter>
-    </ClCompile>
     <ClCompile Include="SystemManager.cpp">
       <Filter>Source Files\ECS</Filter>
     </ClCompile>
     <ClCompile Include="ScriptManager.cpp">
       <Filter>Source Files\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsDevice.cpp">
+      <Filter>Source Files\Render\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineBackend.cpp">
+      <Filter>Source Files\Render\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Render\Frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Source Files\Render\Frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files\Render\Frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\Render\Frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Source Files\Render\Frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files\Render\Frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderContext.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
+      <Filter>Source Files\Render</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

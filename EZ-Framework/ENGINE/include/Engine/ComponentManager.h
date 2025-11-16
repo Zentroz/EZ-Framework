@@ -137,6 +137,8 @@ private:
 
 template<typename T>
 void ComponentManager::RegisterComponent() {
+	static_assert(std::is_base_of<IComponent, T>::value, "Cannot Register Component! It must inherit IComponent");
+
 	std::string typeName = typeid(T).name();
 
 	if (m_componentTypes.find(typeName) != m_componentTypes.end()) {

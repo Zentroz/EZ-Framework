@@ -4,24 +4,27 @@
 #include"Core/Math.h"
 #include"Core/Time.h"
 
-#include"Graphics.h"
 #include"Mesh.h"
 #include"Material.h"
 #include"Camera.h"
+#include"RenderContext.h"
+#include"RenderTarget.h"
 
 class Renderer {
 public:
 	Renderer();
 
-	void Init(HWND hWnd);
+	void Init(ID3D11Device* device, RenderContext* ctx);
 	void Shutdown();
 	void CreateGlobalBuffer();
 	void SetGlobalBuffers();
+	void InitRender(RenderTarget* mainRenderTarget);
 	void Render();
+	void EndRender();
 	
 	Camera& GetCamera() noexcept { return camera; }
 private:
-	Graphics graphics;
+	RenderContext* ctx = nullptr;
 	Camera camera;
 
 	// temp

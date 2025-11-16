@@ -20,6 +20,7 @@ public:
 		float2 uv;
 	};
 
+	Mesh() = default;
 	Mesh(const char* path, const char* name);
 	Mesh(std::vector<float3> vertices, std::vector<float3> normals, std::vector<uint16_t> indices);
 	Mesh(std::vector<Vertex> vertex, std::vector<uint16_t> indices);
@@ -27,9 +28,13 @@ public:
 
 	void LoadMeshFromFile(std::string fileName);
 	void CreateBuffers(ID3D11Device* device);
-	void Bind(ID3D11DeviceContext* context);
+
+	ID3D11Buffer* GetVertexBuffer() { return m_pVertexBuffer; }
+	ID3D11Buffer* GetIndexBuffer() { return m_pIndexBuffer; }
 
 	UINT GetIndexCount() const { return static_cast<UINT>(indices.size()); }
+	UINT GetOffset() { return 0; }
+	UINT GetStride() { return sizeof(Vertex); }
 
 private:
 	std::vector<Vertex> vertices;

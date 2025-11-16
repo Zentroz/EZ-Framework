@@ -58,14 +58,6 @@ void Mesh::CreateBuffers(ID3D11Device* device) {
 	CHECK_DXHR(hr, "Failed to create index buffer");
 }
 
-void Mesh::Bind(ID3D11DeviceContext* context) {
-    UINT stride = sizeof(Vertex);
-    UINT offset = 0;
-
-    context->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
-	context->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-}
-
 void Mesh::LoadMeshFromFile(std::string fileName) {
     std::ifstream file(fileName);
 

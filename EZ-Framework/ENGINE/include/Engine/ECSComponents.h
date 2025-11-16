@@ -49,6 +49,10 @@ struct TransformComponent : IComponent {
 	}
 };
 
+struct MeshComponent : IComponent {
+	std::string meshName;
+};
+
 struct MaterialComponent : IComponent {
 	std::string materialName;
 

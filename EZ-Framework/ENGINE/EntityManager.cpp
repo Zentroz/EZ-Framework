@@ -27,3 +27,7 @@ void EntityManager::DestroyEntity(Entity entity) {
 	m_entities.reset(entity);
 	entitiesAlive--;
 }
+
+bool EntityManager::IsEntityAlive(Entity entity) const {
+	return m_entities.test(entity);
+}
