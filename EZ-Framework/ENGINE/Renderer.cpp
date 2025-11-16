@@ -4,20 +4,6 @@ Renderer::Renderer() {}
 
 void Renderer::Init(ID3D11Device* device, RenderContext* ctx) {
 	this->ctx = ctx;
-
-	//testMesh = *(new Mesh("Mesh/monkey.obj", "Monkey"));
-
-	//testMesh.CreateBuffers(graphics.GetDevice());
-	//testShader.CompileFromFile("Shaders/default.hlsl", graphics.GetDevice());
-
-	//testMaterial.ReflectShaderVariables();
-	//CreateGlobalBuffer();
-
-	//testMaterial.CreateMaterialBuffer(graphics.GetDevice());
-
-	//testMaterial.SetFloat("test", 0.5f);
-
-	//testMaterial.Upload(graphics.GetContext());
 }
 
 void Renderer::Shutdown() {
