@@ -1,22 +1,22 @@
-#include"Core/Time.h"
+#include"Core/GameTime.h"
 
-std::chrono::steady_clock::time_point Time::s_startTime;
-std::chrono::steady_clock::time_point Time::s_lastFrameTime;
+std::chrono::steady_clock::time_point GameTime::s_startTime;
+std::chrono::steady_clock::time_point GameTime::s_lastFrameTime;
 
-float Time::deltaTime = 0.0f;
-float Time::time = 0.0f;
-int Time::fps = 0;
+float GameTime::deltaTime = 0.0f;
+float GameTime::time = 0.0f;
+int GameTime::fps = 0;
 
-float Time::fpsCounter;
-float Time::fpsTimer;
+float GameTime::fpsCounter;
+float GameTime::fpsTimer;
 
-void Time::Start() {
+void GameTime::Start() {
 	// Initial Time Capture
 	s_startTime = std::chrono::steady_clock::now();
 	s_lastFrameTime = s_startTime;
 }
 
-void Time::Update() {
+void GameTime::Update() {
 	// Current Time Retrieval and Delta Time Calculation 
 	
 	auto currentTime = std::chrono::steady_clock::now();

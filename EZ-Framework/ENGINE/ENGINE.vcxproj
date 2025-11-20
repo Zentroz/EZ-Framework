@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Engine\Camera.h" />
+    <ClInclude Include="include\Engine\Collision.h" />
     <ClInclude Include="include\Engine\ComponentManager.h" />
     <ClInclude Include="include\Engine\ECSComponents.h" />
     <ClInclude Include="include\Engine\ECSData.h" />
@@ -156,15 +157,21 @@
     <ClInclude Include="include\Engine\Input.h" />
     <ClInclude Include="include\Engine\Material.h" />
     <ClInclude Include="include\Engine\Mesh.h" />
+    <ClInclude Include="include\Engine\PhysicsManager.h" />
     <ClInclude Include="include\Engine\Registry.h" />
     <ClInclude Include="include\Engine\EngineBackend.h" />
     <ClInclude Include="include\Engine\RenderContext.h" />
     <ClInclude Include="include\Engine\Renderer.h" />
+    <ClInclude Include="include\Engine\RenderItem.h" />
+    <ClInclude Include="include\Engine\RenderPass.h" />
     <ClInclude Include="include\Engine\RenderTarget.h" />
     <ClInclude Include="include\Engine\ResourceManager.h" />
+    <ClInclude Include="include\Engine\Resources.h" />
+    <ClInclude Include="include\Engine\Scene.h" />
     <ClInclude Include="include\Engine\ScriptManager.h" />
     <ClInclude Include="include\Engine\Shader.h" />
     <ClInclude Include="include\Engine\SystemManager.h" />
+    <ClInclude Include="include\Engine\View.h" />
     <ClInclude Include="include\Engine\Window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -181,8 +188,11 @@
     <ClCompile Include="Registry.cpp" />
     <ClCompile Include="RenderContext.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RenderPass.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="Resources.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ScriptManager.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SystemManager.cpp" />

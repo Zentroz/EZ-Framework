@@ -2,71 +2,98 @@
 
 Renderer::Renderer() {}
 
-void Renderer::Init(ID3D11Device* device, RenderContext* ctx) {
+void Renderer::Init(ID3D11Device* device, RenderContext* ctx, ID3D11DepthStencilState* defaultDepthState, ID3D11RasterizerState* defaultRasteriser) {
 	this->ctx = ctx;
+	this->defaultDepthState = defaultDepthState;
+	this->defaultRasteriser = defaultRasteriser;
 
-	//testMesh = *(new Mesh("Mesh/monkey.obj", "Monkey"));
+	resources.SetDevice(device);
 
-	//testMesh.CreateBuffers(graphics.GetDevice());
-	//testShader.CompileFromFile("Shaders/default.hlsl", graphics.GetDevice());
+	depthStencilView = resources.CreateDepthStencilBuffer();
 
-	//testMaterial.ReflectShaderVariables();
-	//CreateGlobalBuffer();
-
-	//testMaterial.CreateMaterialBuffer(graphics.GetDevice());
-
-	//testMaterial.SetFloat("test", 0.5f);
-
-	//testMaterial.Upload(graphics.GetContext());
+	CreateGlobalBuffer(device);
 }
 
-void Renderer::Shutdown() {
-	//graphics.Shutdown();
-}
+void Renderer::Shutdown() {}
 
-void Renderer::CreateGlobalBuffer() {
+void Renderer::CreateGlobalBuffer(ID3D11Device* device) {
 	HRESULT hr;
 
 	D3D11_BUFFER_DESC cbd = {};
-	cbd.Usage = D3D11_USAGE_DEFAULT;
+	cbd.Usage = D3D11_USAGE_DYNAMIC;
 	cbd.ByteWidth = sizeof(GlobalConstantBuffer);
 	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cbd.CPUAccessFlags = 0;
+	cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-	//hr = graphics.GetDevice()->CreateBuffer(&cbd, nullptr, &globalBuffer);
+	hr = device->CreateBuffer(&cbd, nullptr, &globalBuffer);
+
+	CHECK_DXHR(hr, "Failed to create global buffer.");
+
+	D3D11_BUFFER_DESC pOD = {};
+	pOD.Usage = D3D11_USAGE_DYNAMIC;
+	pOD.ByteWidth = sizeof(PerObjectBuffer);
+	pOD.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	pOD.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+	hr = device->CreateBuffer(&pOD, nullptr, &perObjectBuffer);
+
+	CHECK_DXHR(hr, "Failed to create Per Object buffer.");
 }
 
 void Renderer::SetGlobalBuffers() {
-	float3 lightPosition = float3(0, 0, -3);
-	float3 testMeshPosition = float3(0, 0, 1);
-
 	GlobalConstantBuffer cbData;
-
-	cbData.model = XMMatrixTranspose(
-		XMMatrixRotationAxis(XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f), XMConvertToRadians(sin(Time::time / 6) * 360)) *
-		XMMatrixTranslation(testMeshPosition.x, testMeshPosition.y, testMeshPosition.z)
-	);
 
 	cbData.view = XMMatrixTranspose(camera.GetViewMatrix());
 	cbData.projection = XMMatrixTranspose(camera.GetProjectionMatrix(1.0f));
-	cbData.cameraPosition = camera.GetPosition();
-	cbData.lightDirection = (lightPosition - testMeshPosition).normalize();
-	cbData.deltaTime = Time::deltaTime;
-	cbData.time = Time::time;
+	float3 camPos = camera.position;
+	cbData.cameraPosition = float4(camPos.x, camPos.y, camPos.z, 0);
+	cbData.lightDirection = (quaternion::FromAxisAngle(float3(0, 1, 0), 30 * Deg2Rad) * quaternion::FromAxisAngle(float3(1, 0, 0), 65 * Deg2Rad)).forward() * -1;
+	cbData.timeData = float4(GameTime::time, GameTime::deltaTime, 0, 0);
 
-	ctx->SetConstantBuffer(globalBuffer, &cbData);
+	ctx->UpdateMappedSubresource(globalBuffer, &cbData, sizeof(cbData));
 }
 
 void Renderer::InitRender(RenderTarget* mainRenderTarget) {
 	ctx->ClearRenderTarget(mainRenderTarget->GetRTV(), float4(0.15f, 0.15f, 0.3f, 1.0f));
+	ctx->ClearDepthStencilView(depthStencilView.Get());
 
-	ctx->SetRenderTarget(mainRenderTarget->GetRTV());
+	ctx->SetRenderTarget(mainRenderTarget->GetRTV(), depthStencilView.Get());
+	ctx->SetDepthStencilState(defaultDepthState);
+	ctx->SetViewport();
+
+	ctx->SetRasteriser(defaultRasteriser);
 }
 
-void Renderer::Render() {
-	// Draw calls here
+void Renderer::Render(const std::vector<RenderItem>& renderList) {
+	SetGlobalBuffers();
+
+	PerObjectBuffer perObjectData;
+
+	ctx->SetTopology();
+
+	for (const RenderItem& item : renderList) {
+		std::shared_ptr<Shader> shader = resources.Load<Shader>(item.shaderPath);
+		std::shared_ptr<Mesh> mesh = resources.Load<Mesh>(item.meshPath);
+
+		perObjectData.model = item.model;
+
+		ctx->UpdateMappedSubresource(perObjectBuffer, &perObjectData, sizeof(perObjectData));
+
+
+		ctx->SetInputLayout(shader->GetInputLayout());
+
+		ctx->SetShader(shader.get());
+
+		ctx->SetVSConstantBuffer(perObjectBuffer, 1);
+		ctx->SetVSConstantBuffer(globalBuffer, 0);
+		ctx->SetPSConstantBuffer(globalBuffer, 0);
+
+		ctx->DrawMesh(mesh.get());
+
+		ctx->DrawIndexed(mesh->GetIndexCount());
+	}
 }
+
 void Renderer::EndRender() {
-	ctx->SetRenderTarget(nullptr);
-	//ctx->SetShaderResource(nullptr, 1);
+	ctx->SetRenderTarget(nullptr, nullptr);
 }

@@ -3,6 +3,10 @@
 
 #include <cmath>
 
+const double PI = 3.14159265359;
+const float Rad2Deg = 180 / PI;
+const float Deg2Rad = PI / 180;
+
 // # ------------------------------- Vectors -------------------------------------------- #
 
 struct float2 {
@@ -226,6 +230,64 @@ public:
 
 	static float4 one() {
 		return float4(1, 1, 1, 1);
+	}
+};
+
+struct quaternion {
+	float x, y, z, w;
+
+	quaternion() = default;
+	quaternion(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
+
+	static quaternion FromAxisAngle(float3 axis, float angleRad) {
+		float half = angleRad * 0.5f;
+		float s = sinf(half);
+		return quaternion(
+			axis.x * s,
+			axis.y * s,
+			axis.z * s,
+			cosf(half)
+		);
+	}
+
+	static quaternion Identity() { return quaternion(0, 0, 0, 1); }
+
+	quaternion operator*(const quaternion& q) const {
+		return quaternion(
+			w * q.x + x * q.w + y * q.z - z * q.y,
+			w * q.y - x * q.z + y * q.w + z * q.x,
+			w * q.z + x * q.y - y * q.x + z * q.w,
+			w * q.w - x * q.x - y * q.y - z * q.z
+		);
+	}
+
+	void normalize() {
+		float len = sqrtf(w * w + x * x + y * y + z * z);
+		w /= len; x /= len; y /= len; z /= len;
+	}
+
+	float3 forward() const {
+		return {
+			2 * (x * z + y * w),
+			2 * (y * z - x * w),
+			1 - 2 * (x * x + y * y)
+		};
+	}
+
+	float3 right() const {
+		return {
+			1 - 2 * (y * y + z * z),
+			2 * (x * y + w * z),
+			2 * (x * z - w * y)
+		};
+	}
+
+	float3 up() const {
+		return {
+			2 * (x * y - w * z),
+			1 - 2 * (x * x + z * z),
+			2 * (y * z + w * x)
+		};
 	}
 };
 

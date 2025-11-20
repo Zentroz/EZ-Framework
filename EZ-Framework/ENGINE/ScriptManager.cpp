@@ -1,42 +1,45 @@
 #include"Engine/ScriptManager.h"
 
-ScriptManager::ScriptManager() {
+ScriptManager::ScriptManager() : scriptsCount(0) {
 	m_lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::string);
-}
 
-void ScriptManager::Init(Input& input, Registry* registry, Camera* camera) {
-	RegisterWrapperFunctions(input, registry, camera);
-
-	LoadScripts(registry);
-}
-
-bool ScriptManager::LoadScripts(Registry* registry) {
-
-	std::vector<ScriptComponent*> scripts = registry->GetAllComponentsOfType<ScriptComponent>();
-
-	for (ScriptComponent* script : scripts) {
-		script->luaEnv = sol::environment(m_lua, sol::create, m_lua.globals());
-
-		auto my = script->luaEnv.create_named("MY");
-		my["id"] = script->entity;
-
-		try {
-			m_lua.safe_script_file(script->path, script->luaEnv);
-		}
-		catch (const sol::error& e) {
-			EXCEPTION(e.what());
-			return false;
-		}
+	try {
+		m_lua.safe_script_file("Assets/Scripts/table.lua");
 	}
+	catch (const sol::error& e) {
+		EXCEPTION(e.what());
+	}
+
+	std::string type = m_lua["type"]();
+	int i = 0;
+}
+
+void ScriptManager::Init(Input* input, Camera* camera, Registry* registry) {
+	RegisterWrapperFunctions(input, camera, registry);
+}
+
+bool ScriptManager::LoadScript(std::string path) {
+	if (loadedScripts.contains(path)) return false;
+
+	 sol::environment env = sol::environment(m_lua, sol::create, m_lua.globals());
+
+	try {
+		m_lua.safe_script_file(path, env);
+	}
+	catch (const sol::error& e) {
+		EXCEPTION(e.what());
+		return false;
+	}
+
+	loadedScripts[path] = env;
 
 	return true;
 }
 
-void ScriptManager::Start(Registry* registry) {
-	std::vector<ScriptComponent*> scripts = registry->GetAllComponentsOfType<ScriptComponent>();
+void ScriptManager::Update() {
+	for (auto& pair : loadedScripts) {
+		sol::function updateFunc = pair.second["update"];
 
-	for (ScriptComponent* script : scripts) {
-		sol::function updateFunc = script->luaEnv["start"];
 		if (updateFunc.valid()) {
 			try {
 				updateFunc();
@@ -48,26 +51,7 @@ void ScriptManager::Start(Registry* registry) {
 	}
 }
 
-void ScriptManager::Update(Registry* registry) {
-	std::vector<ScriptComponent*> scripts = registry->GetAllComponentsOfType<ScriptComponent>();
-
-	for (ScriptComponent* script : scripts) {
-		sol::function updateFunc = script->luaEnv["update"];
-		if (updateFunc.valid()) {
-			try {
-				updateFunc();
-			}
-			catch (const sol::error& e) {
-				EXCEPTION(e.what());
-			}
-		}
-	}
-}
-
-void ScriptManager::RegisterWrapperFunctions(Input& input, Registry* registry, Camera* camera) {
-	// ECS
-	RegisterECSWrappers(registry);
-
+void ScriptManager::RegisterWrapperFunctions(Input* input, Camera* camera, Registry* registry) {
 	// Math
 	RegisterMathWrappers();
 
@@ -83,6 +67,8 @@ void ScriptManager::RegisterWrapperFunctions(Input& input, Registry* registry, C
 
 	// Input
 	RegisterInputWrappers(input);
+
+	RegisterECSWrappers(registry);
 
 	// Utility
 	RegisterTimeWrappers();
@@ -141,31 +127,63 @@ void ScriptManager::RegisterECSWrappers(Registry* registry) {
 		"Transform", LuaComponent::Transform
 	);
 
+	sol::state* lua = &m_lua;
+
 	game.set_function("GetComponent",
-		[registry](int id, LuaComponent component) {
+		[lua, registry](int id, LuaComponent component) {
+			sol::state_view view(*lua);
+			IComponent* comp = nullptr;
 			if (component == Transform) {
-				TransformComponent* t = registry->GetComponent<TransformComponent>(id);
-
-				if (t == nullptr) {
-					EXCEPTION("Entity does not have Transform component");
-				}
-
-				return t;
+				comp = registry->GetComponent<TransformComponent>(id);
 			}
+			else {
+				EXCEPTION(("There is no Component: " + std::to_string(component)).c_str());
+			}
+
+			if (comp == nullptr) {
+				EXCEPTION(("Entity does not have Component: " + std::to_string(component)).c_str());
+			}
+
+			return sol::make_object(view.lua_state(), comp);
 		}
 	);
 }
 
 void ScriptManager::RegisterComponentWrappers() {
-	TransformComponent::RegisterWrapper(&m_lua);
+	m_lua.new_usertype<IComponent>("Component");
+
+	TransformComponent::RegisterLuaWrapper(m_lua);
 }
 
 void ScriptManager::RegisterCameraWrappers(Camera* camera) {
 	sol::table cam = m_lua.create_named_table("Camera");
 
+	float3* camPosition = &camera->position;
+
+	cam.set("position", camPosition);
+	cam["rotation"] = &camera->rotation;
+
+	cam.set_function("GetPosition",
+		[camera]() {
+			return camera->position;
+		}
+	);
+
 	cam.set_function("SetPosition",
 		[camera](float3 position) {
 			camera->SetPosition(position);
+		}
+	);
+
+	cam.set_function("GetRotation",
+		[camera]() {
+			return camera->rotation;
+		}
+	);
+
+	cam.set_function("SetRotation",
+		[camera](quaternion rotation) {
+			camera->rotation = rotation;
 		}
 	);
 }
@@ -180,7 +198,7 @@ void ScriptManager::RegisterMaterialWrappers() {
 	);
 }
 
-void ScriptManager::RegisterInputWrappers(Input& input) {
+void ScriptManager::RegisterInputWrappers(Input* input) {
 	m_lua.new_enum("Key",
 		"A", Input::KeyCode::A,
 		"B", Input::KeyCode::B,
@@ -219,9 +237,23 @@ void ScriptManager::RegisterInputWrappers(Input& input) {
 
 	sol::table inputTable = m_lua.create_named_table("Input");
 
+	inputTable.set_function("GetMousePosition",
+		[input]() {
+			return input->GetMousePosition();
+		}
+	);
+
+	inputTable.set_function("GetMouseDelta",
+		[input]() {
+			return input->GetMouseDelta();
+		}
+	);
+
 	inputTable.set_function("GetKey",
-		[&](Input::KeyCode key) {
-			return input.GetKey(key);
+		[input](Input::KeyCode key) {
+			bool isKey = input->GetKey(key);
+
+			return isKey;
 		}
 	);
 }
@@ -232,8 +264,13 @@ void ScriptManager::RegisterMathWrappers() {
 		"x", &float3::x,
 		"y", &float3::y,
 		"z", &float3::z,
-		"length", &float3::length,
-		"normalize", &float3::normalize,
+		"One", &float3::one,
+		"Zero", &float3::zero,
+		"Up", &float3::up,
+		"Forward", &float3::forward,
+		"Right", &float3::right,
+		"Length", &float3::length,
+		"Normalize", &float3::normalize,
 		//"dot", &float3::dot,
 		//"cross", &float3::cross
 
@@ -246,8 +283,12 @@ void ScriptManager::RegisterMathWrappers() {
 		sol::constructors<float2(), float2(float, float)>(),
 		"x", &float2::x,
 		"y", &float2::y,
-		"length", &float2::length,
-		"normalize", &float2::normalize,
+		"One", &float2::one,
+		"Zero", &float2::zero,
+		"Up", &float2::up,
+		"Right", &float2::right,
+		"Length", &float2::length,
+		"Normalize", &float2::normalize,
 		//"dot", &float3::dot,
 		//"cross", &float3::cross
 
@@ -255,14 +296,37 @@ void ScriptManager::RegisterMathWrappers() {
 		sol::meta_function::subtraction, sol::resolve<float2(const float2&) const>(&float2::operator-),
 		sol::meta_function::multiplication, sol::overload(sol::resolve<float2(float) const>(&float2::operator*))
 	);
+
+	m_lua.new_usertype<quaternion>("Quaternion",
+		sol::constructors<quaternion(), quaternion(float, float, float, float)>(),
+		"x", &quaternion::x,
+		"y", &quaternion::y,
+		"z", &quaternion::z,
+		"w", &quaternion::w,
+		"Identity", &quaternion::Identity,
+		"Forward", &quaternion::forward,
+		"Up", &quaternion::up,
+		"Right", &quaternion::right,
+		"Normalize", &quaternion::normalize,
+		"FromAxisAngle", sol::factories([](float3 axis, float angle) {
+			return quaternion::FromAxisAngle(axis, angle);
+		}),
+		sol::meta_function::multiplication, sol::overload(sol::resolve<quaternion(const quaternion&) const>(&quaternion::operator*))
+	);
 }
 
 void ScriptManager::RegisterTimeWrappers() {
 	sol::table time = m_lua.create_named_table("Time");
 
+	time.set_function("GetTotalTime",
+		[]() {
+			return GameTime::time;
+		}
+	);
+
 	time.set_function("GetDeltaTime",
 		[]() {
-			return Time::deltaTime;
+			return GameTime::deltaTime;
 		}
 	);
 }

@@ -2,11 +2,12 @@
 #define APPLICATION_CLASS_H
 
 #include"Engine/Engine.h"
+#include"TestScene.h"
 
-class Application {
+class Game {
 public:
-	Application(int width, int height, const char* title);
-	~Application();
+	Game(int width, int height, const char* title);
+	~Game();
 
 	void Run();
 

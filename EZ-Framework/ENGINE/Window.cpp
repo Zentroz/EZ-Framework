@@ -63,6 +63,8 @@ void Window::Init(int width, int height, const char* title) {
 
     ShowWindow(hWnd, SW_SHOW);
 
+    input.LockCursor(true);
+
     isRunning = true;
 }
 
@@ -71,13 +73,15 @@ void Window::Run() {
 
     while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
         if (msg.message == WM_QUIT) {
-			isRunning = false;
+            isRunning = false;
             break;
         }
 
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
+
+    input.UpdateMousePosition(GetHwnd());
 }
 
 void Window::Shutdown() {

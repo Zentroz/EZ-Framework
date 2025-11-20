@@ -9,6 +9,9 @@ using namespace DirectX;
 
 class Camera {
 public:
+	float3 position;
+	quaternion rotation;
+
 	Camera();
 
 	XMMATRIX GetViewMatrix() const;
@@ -16,14 +19,6 @@ public:
 
 	void SetPosition(const float3& pos);
 	void SetPosition(const XMFLOAT3& pos);
-
-	float3 GetPosition();
-
-	void FlipForward(int to);
-private:
-	XMFLOAT3 position;
-	XMFLOAT3 forward;
-	XMFLOAT3 up;
 };
 
 #endif

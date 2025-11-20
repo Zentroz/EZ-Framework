@@ -2,54 +2,74 @@
 #define SPARSESET_CLASS_H
 
 #include<vector>
+#include<unordered_map>
 #include"ErrorHandler.h"
 
 template<typename T>
 class SparseSet {
 public:
-    unsigned int size;
+	uint32_t size;
 
-    SparseSet(int capacity);
+    SparseSet(uint32_t capacity, uint8_t paginationSize);
 
-	T* get(unsigned int key) {
-		if (sparse[key] == -1) {
+	T* get(uint32_t key) {
+		uint32_t elementIndex = key % paginationSize;
+		uint32_t pageIndex = key / paginationSize;
+
+		if (!pages.contains(pageIndex) || pages[pageIndex][elementIndex] >= capacity) {
 			return nullptr;
 		}
 
-		return dense[sparse[key]];
+		return dense[pages[pageIndex][elementIndex]];
 	}
 
-	void insert(unsigned int key, T* value) {
-		if (sparse[key] != -1) {
-			EXCEPTION(("Value already exists. Key: " + std::to_string(key)).c_str());
-			return;
+	void insert(uint32_t key, T* value) {
+		uint32_t elementIndex = key % paginationSize;
+		uint32_t pageIndex = key / paginationSize;
+
+		if (pages.contains(pageIndex)) {
+			auto insetPoint = pages[pageIndex].begin() + elementIndex;
+			pages[pageIndex][elementIndex] = size;
+		}
+		else {
+			pages[pageIndex] = std::vector<uint32_t>(paginationSize, capacity + 2);
+			pages[pageIndex][elementIndex] = size;
 		}
 
 		dense.push_back(value);
-		sparse[key] = size;
 		size++;
 	}
 
-	void remove(unsigned int key) {
-		if (sparse[key] == -1) {
-			EXCEPTION("Value does not exist.");
+	void remove(uint32_t key) {
+		uint32_t elementIndex = key % paginationSize;
+		uint32_t pageIndex = key / paginationSize;
+
+		if (!pages.contains(pageIndex)) {
 			return;
 		}
 
-		size_t backIndex = 0;
+		uint32_t backPage = 0;
+		uint32_t backIndex = 0;
 
-		for (size_t i = 0; i < sizeof(sparse); i++) {
-			if (sparse[i] == dense.size() - 1) {
-				backIndex = i;
-				break;
+		for (uint32_t i = 0; i < capacity / paginationSize; i++) {
+			bool found = false;
+			for (uint32_t j = 0; j < paginationSize; j++) {
+				if (pages[i][j] == dense.size() - 1) {
+					backPage = i;
+					backIndex = j;
+					found = true;
+					break;
+				}
 			}
+
+			if (found) break;
 		}
 
-		std::swap(dense[sparse[key]], dense.back());
+		std::swap(dense[pages[pageIndex][elementIndex]], dense.back());
 		dense.pop_back();
 
-		sparse[backIndex] = sparse[key];
-		sparse[key] = -1;
+		pages[backPage][backIndex] = pages[pageIndex][elementIndex];
+		pages[pageIndex][elementIndex] = capacity + 2;
 		size--;
 	}
 
@@ -57,29 +77,33 @@ public:
 		return dense;
 	}
 
-	void clear() {
-		for (unsigned int i = 0; i < capacity; i++) {
-			sparse[i] = -1;
+	std::vector<uint32_t> getAssignedIndex() {
+		std::vector<uint32_t> assignedIndex{};
+
+		for (auto& pair : pages) {
+			for (uint32_t i : pair.second) {
+				if (i < capacity) assignedIndex.push_back(i);
+			}
 		}
+
+		return assignedIndex;
+	}
+
+	void clear() {
+		pages.clear();
 		dense.clear();
 		size = 0;
 	}
 
 private:
-	unsigned int* sparse;
+	std::unordered_map<uint32_t, std::vector<uint32_t>> pages;
 	std::vector<T*> dense;
     unsigned int capacity;
+	uint8_t paginationSize;
 };
 
 template<typename T>
-SparseSet<T>::SparseSet(int capacity) {
-	sparse = new unsigned int[capacity]();
-
-	for (unsigned int i = 0; i < capacity; i++) {
-		sparse[i] = -1;
-	}
-	
-	this->capacity = capacity;
+SparseSet<T>::SparseSet(uint32_t capacity, uint8_t paginationSize) : capacity(capacity), paginationSize(paginationSize) {	
 	size = 0;
 }
 

@@ -1,11 +1,13 @@
 #pragma once
 
-#include"Core/Time.h"
+#include"Core/GameTime.h"
 #include"Engine/EngineBackend.h"
+#include"Engine/Scene.h"
 
+#include<functional>
 #include"Renderer.h"
-#include"Registry.h"
 #include"ScriptManager.h"
+#include"Registry.h"
 
 class Engine {
 public:
@@ -15,8 +17,18 @@ public:
 	void Shutdown();
 	void Frame();
 
+	void LoadScene(Scene* scene) {
+		this->currentScene = scene;
+		scene->SetRegistry(&registry);
+		scene->Setup();
+	}
+
 private:
 	EngineBackend backend;
 	Renderer renderer;
-	Time time;
+	GameTime time;
+	ScriptManager scriptManager;
+	Registry registry;
+
+	Scene* currentScene = nullptr;
 };

@@ -28,7 +28,7 @@ public:
 	void Shutdown();
 	void Run();
 	HWND GetHwnd() const noexcept { return hWnd; }
-	Input& GetInput() noexcept { return input; }
+	Input* GetInput() noexcept { return &input; }
 
 private:
 	int width;

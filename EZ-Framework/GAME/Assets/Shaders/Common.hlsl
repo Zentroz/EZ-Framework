@@ -1,22 +1,26 @@
-// cbuffer GlobalDataBuffer : register(b0){
-//     float4x4 ViewProjectionMatrix;
-//     float4x4 InverseViewProjectionMatrix;
-//     float4   CameraPosition; // w component can be used for padding
-//     float4   LightDirection; // w component can be used for padding
-//     float4   AmbientColor;   // w component can be used for padding
-//     float4   TimeData;       // x: time, y: deltaTime, z: totalTime, w: padding
-// };
-
 cbuffer GlobalBuffer : register(b0)
 {
-    matrix model;
     matrix view;
     matrix projection;
     float4 lightDirection;
     float4 cameraPosition;
-    float time;
-    float deltaTime;
+    float4 timeData;
 };
+
+cbuffer PerObjectBuffer : register(b1)
+{
+    matrix model;
+};
+
+float GetTotalTime()
+{
+    return timeData.x;
+}
+
+float GetDeltaTime()
+{
+    return timeData.y;
+}
 
 float4 ConvertLocalToWorldPosition(float3 position)
 {

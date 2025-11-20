@@ -21,12 +21,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h">
+    <ClInclude Include="Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Application.cpp">
+    <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WinMain.cpp">
@@ -34,12 +37,17 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Scripts\test.lua">
+    <None Include="Assets\Scripts\test.lua">
       <Filter>Resource Files\Scripts</Filter>
     </None>
-    <None Include="Shaders\Common.hlsl">
+    <None Include="Assets\Shaders\Common.hlsl">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="Shaders\default.hlsl" />
+    <None Include="Assets\Shaders\default.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Assets\Scripts\table.lua">
+      <Filter>Resource Files\Scripts</Filter>
+    </None>
   </ItemGroup>
 </Project>

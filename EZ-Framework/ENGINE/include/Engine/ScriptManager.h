@@ -6,12 +6,13 @@
 #pragma comment(lib, "lua54.lib")
 
 #include"Core/Math.h"
-#include"Core/Time.h"
+#include"Core/GameTime.h"
 #include"Core/ErrorHandler.h"
 
 #include"Input.h"
 #include"Registry.h"
 #include"Camera.h"
+
 #include"ECSComponents.h"
 
 
@@ -19,13 +20,13 @@ class ScriptManager {
 public:
 	ScriptManager();
 
-	void Init(Input& input, Registry* registry, Camera* camera);
+	void Init(Input* input, Camera* camera, Registry* registry);
 
-	void RegisterWrapperFunctions(Input& input, Registry* registry, Camera* camera);
+	void RegisterWrapperFunctions(Input* input, Camera* camera, Registry* registry);
 
 #pragma region Wrappers
 
-	void RegisterInputWrappers(Input& input);
+	void RegisterInputWrappers(Input* input);
 	void RegisterMathWrappers();
 	void RegisterCameraWrappers(Camera* camera);
 	void RegisterMaterialWrappers();
@@ -35,11 +36,13 @@ public:
 
 #pragma endregion
 
-	bool LoadScripts(Registry* registry);
-	void Start(Registry* registry);
-	void Update(Registry* registry);
+	bool LoadScript(std::string path);
+	void Update();
 private:
 	sol::state m_lua;
+
+	std::unordered_map<std::string, sol::environment> loadedScripts;
+	uint8_t scriptsCount;
 };
 
 #endif

@@ -23,10 +23,10 @@
     <ClInclude Include="include\Core\ErrorHandler.h" />
     <ClInclude Include="include\Core\Math.h" />
     <ClInclude Include="include\Core\SparceSet.h" />
-    <ClInclude Include="include\Core\Time.h" />
+    <ClInclude Include="include\Core\GameTime.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Time.cpp" />
+    <ClCompile Include="GameTime.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -16,17 +16,17 @@ class ComponentArray {
 public:
 	virtual ~ComponentArray() = default;
 
-	ComponentArray() : set(MAX_ENTITIES) {}
+	ComponentArray() : set(MAX_ENTITIES, 5) {}
 
-	void InsertData(unsigned int entity, T* component) {
+	void InsertData(uint32_t entity, T* component) {
 		set.insert(entity, component);
 	}
 
-	void RemoveData(unsigned int entity) {
+	void RemoveData(uint32_t entity) {
 		set.remove(entity);
 	}
 
-	T* GetData(unsigned int entity) {
+	T* GetData(uint32_t entity) {
 		return set.get(entity);
 	}
 
@@ -36,6 +36,16 @@ public:
 
 	void Clear() {
 		set.clear();
+	}
+
+	std::vector<Entity> GetAssignedEntities() {
+		std::vector<Entity> entities;
+
+		for (IComponent* component : set.getAll()) {
+			entities.push_back(component->entity);
+		}
+
+		return entities;
 	}
 
 	int Size() {
@@ -78,7 +88,7 @@ public:
 	}
 
 	template<typename T>
-	void AddComponent(unsigned int entity, T* component) {
+	void AddComponent(uint32_t entity, T* component) {
 		ComponentType type = GetComponentType<T>();
 		ComponentArray<IComponent>* componentArray = GetComponentArray(type);
 		if (componentArray == nullptr) {
@@ -120,12 +130,19 @@ public:
 	}
 
 	template<typename T>
-	bool HasComponent(unsigned int entity) {
+	bool HasComponent(uint32_t entity) {
 		ComponentType type = GetComponentType<T>();
 
 		ComponentArray<IComponent>* componentArray = GetComponentArray(type);
 
 		return componentArray->GetData(entity) != nullptr;
+	}
+
+	template<typename T>
+	ComponentArray<IComponent>* GetComponentArray() {
+		ComponentType type = GetComponentType<T>();
+
+		return &m_componentArrays[type];
 	}
 
 

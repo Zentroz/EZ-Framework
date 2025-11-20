@@ -1,11 +1,9 @@
-#ifndef TIME_CLASS_H 
-#define TIME_CLASS_H
+#ifndef GAME_TIME_CLASS_H 
+#define GAME_TIME_CLASS_H
 
-#include<cmath>
-#include<ctime>
 #include<chrono>
 
-class Time {
+class GameTime {
 public:
 	static float deltaTime;
 	static float time;
