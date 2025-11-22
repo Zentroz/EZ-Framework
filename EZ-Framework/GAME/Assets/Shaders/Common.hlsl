@@ -10,6 +10,7 @@ cbuffer GlobalBuffer : register(b0)
 cbuffer PerObjectBuffer : register(b1)
 {
     matrix model;
+    float4 baseColor;
 };
 
 float GetTotalTime()

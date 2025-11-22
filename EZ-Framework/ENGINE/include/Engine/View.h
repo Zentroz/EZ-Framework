@@ -3,11 +3,10 @@
 
 #include<tuple>
 #include"ComponentManager.h"
-#include"EntityManager.h"
 
 struct View {
 public:
-	View(ComponentManager* componentManager, EntityManager* entityManager, std::vector<Entity> result) : componentManager(componentManager), entityManager(entityManager), result(result) {};
+	View(ComponentManager* componentManager, std::vector<Entity> result) : componentManager(componentManager), result(result) {};
 
 	template<typename... Components>
 	View Has() {
@@ -15,18 +14,18 @@ public:
 
 		auto pools = std::tuple{ c->GetComponentArray<Components>()... };
 
-		ComponentArray<IComponent>* smallest = (std::tuple_element_t<0, decltype(pools)>)nullptr;
+		IComponentArray* smallest = nullptr;
 		size_t smallestSize = SIZE_MAX;
 
 		std::apply([&](auto... p) {
 			(([&]() {
 				if (p->Size() < smallestSize) {
-					smallest = p;
+					smallest = p;   // <-- no cast needed
 					smallestSize = p->Size();
 				}
 				}()), ...);
-			}, pools
-		);
+			}, pools);
+
 
 		std::vector<Entity> result;
 		for (Entity e : smallest->GetAssignedEntities()) {
@@ -37,13 +36,12 @@ public:
 
 		this->result.clear();
 
-		return View(componentManager, entityManager, result);
+		return View(componentManager, result);
 	}
 
 	std::vector<Entity> List() const { return result; }
 
 private:
-	EntityManager* entityManager;
 	ComponentManager* componentManager;
 	std::vector<Entity> result;
 };

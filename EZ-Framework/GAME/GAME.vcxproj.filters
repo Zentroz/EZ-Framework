@@ -19,6 +19,9 @@
     <Filter Include="Resource Files\Scripts">
       <UniqueIdentifier>{ef4cb33d-2efa-4b7a-9e7e-cf109b96257f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Scripts\Components">
+      <UniqueIdentifier>{a6183685-379f-4eb4-a5c3-a1bff17afecc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -49,5 +52,15 @@
     <None Include="Assets\Scripts\table.lua">
       <Filter>Resource Files\Scripts</Filter>
     </None>
+    <None Include="Assets\Scripts\MeshRenderer.lua">
+      <Filter>Resource Files\Scripts\Components</Filter>
+    </None>
+    <None Include="Assets\Scripts\Transform.lua">
+      <Filter>Resource Files\Scripts\Components</Filter>
+    </None>
+    <None Include="Assets\Scripts\HealthComponent.lua">
+      <Filter>Resource Files\Scripts\Components</Filter>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

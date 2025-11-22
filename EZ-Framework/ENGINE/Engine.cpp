@@ -1,6 +1,6 @@
 #include"Engine/Engine.h"
 
-Engine::Engine() {
+Engine::Engine() : scriptManager(&registry) {
 }
 
 void Engine::Init(int width, int height, const char* title) {
@@ -31,6 +31,8 @@ void Engine::Frame() {
 		run = backend.Run();
 
 		scriptManager.Update();
+
+		physicsManager.Update(&registry);
 
 		renderer.InitRender(backend.GetMainRenderTarget());
 		renderer.Render(registry.CreateRenderList());

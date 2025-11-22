@@ -61,6 +61,14 @@ void RenderContext::DrawMesh(Mesh* mesh) {
 	ctx->IASetIndexBuffer(iBuffer, DXGI_FORMAT_R32_UINT, 0);
 }
 
+void RenderContext::SetSamplerState(UINT slot, ID3D11SamplerState* const* samplerState) {
+	ctx->PSSetSamplers(slot, 1, samplerState);
+}
+
+void RenderContext::SetPSShaderResource(UINT slot, ID3D11ShaderResourceView* const* srv) {
+	ctx->PSSetShaderResources(slot, 1u, srv);
+}
+
 void RenderContext::SetVSConstantBuffer(ID3D11Buffer* buffer, UINT slot) {
 	ctx->VSSetConstantBuffers(slot, 1, &buffer);
 }

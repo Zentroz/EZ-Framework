@@ -18,7 +18,7 @@
 
 class ScriptManager {
 public:
-	ScriptManager();
+	ScriptManager(Registry* registry);
 
 	void Init(Input* input, Camera* camera, Registry* registry);
 
@@ -30,7 +30,7 @@ public:
 	void RegisterMathWrappers();
 	void RegisterCameraWrappers(Camera* camera);
 	void RegisterMaterialWrappers();
-	void RegisterComponentWrappers();
+	void RegisterEngineComponent(Registry* registry);
 	void RegisterTimeWrappers();
 	void RegisterECSWrappers(Registry* registry);
 
@@ -40,9 +40,11 @@ public:
 	void Update();
 private:
 	sol::state m_lua;
-
+	bool calledAwake = false;
 	std::unordered_map<std::string, sol::environment> loadedScripts;
 	uint8_t scriptsCount;
+
+	Registry* registry;
 };
 
 #endif

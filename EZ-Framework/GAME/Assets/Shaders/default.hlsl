@@ -25,6 +25,9 @@ PSInput VSMain(VSInput input)
     return output;
 }
 
+Texture2D tex : register(t0);
+SamplerState splr;
+
 float4 PSMain(PSInput input) : SV_TARGET
 {
     float ambient = 0.2f;
@@ -42,7 +45,7 @@ float4 PSMain(PSInput input) : SV_TARGET
     float specularAmount = pow(max(dot(viewDirection, reflectDir), 0), 8);
     float specular = specularLight * specularAmount;
 
-    float3 diffuse = color * (lightIntensity + specular);
+    float4 diffuse = tex.Sample(splr, input.uv) * baseColor * (lightIntensity + specular);
     
-    return float4(diffuse, 1.0f);
+    return diffuse;
 }

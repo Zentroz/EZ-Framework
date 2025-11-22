@@ -179,3 +179,32 @@ bool Mesh::CreateBuffers(ID3D11Device* device, std::vector<Vertex> vertices, std
 
     return true;
 }
+
+Texture::~Texture() {
+    if (m_textureSRV) m_textureSRV.ReleaseAndGetAddressOf();
+}
+
+bool Texture::LoadFromFile(std::string path, ID3D11Device* device) {
+    if (path.length() == 0) return false;
+
+    HRESULT hr = DirectX::CreateWICTextureFromFile(
+        device,
+        std::wstring(path.begin(), path.end()).c_str(),
+        nullptr,
+        m_textureSRV.GetAddressOf()
+    );
+
+    CHECK_DXHR(hr, "Failed to load texture");
+
+    if (FAILED(hr)) return false;
+
+    D3D11_SAMPLER_DESC sDesc;
+    sDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    sDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    sDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    sDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+
+    device->CreateSamplerState(&sDesc, &m_samplerState);
+
+    return true;
+}

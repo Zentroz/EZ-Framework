@@ -34,6 +34,7 @@ private:
 
 	struct PerObjectBuffer {
 		XMMATRIX  model;
+		float4 color;
 	};
 
 	ID3D11Buffer* perObjectBuffer = nullptr;

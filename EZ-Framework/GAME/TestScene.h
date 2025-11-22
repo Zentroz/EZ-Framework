@@ -7,19 +7,19 @@ public:
 	TestScene() : Scene("Test Scene") {};
 
 	void Setup() override {
-		Entity cube = registry->CreateEntity();
-		registry->AddComponent(cube, new TransformComponent(float3::zero(), float3::one(), quaternion::Identity()));
-		registry->AddComponent(cube, new MeshComponent("Assets/Mesh/cube.obj"));
-		registry->AddComponent(cube, new MaterialComponent("Assets/Shaders/default.hlsl"));
 
-		Entity cube2 = registry->CreateEntity();
-		registry->AddComponent(cube2, new TransformComponent(float3(-3, 0, 0), float3::one(), quaternion::Identity()));
-		registry->AddComponent(cube2, new MeshComponent("Assets/Mesh/cube.obj"));
-		registry->AddComponent(cube2, new MaterialComponent("Assets/Shaders/default.hlsl"));
+		for (short i = 0; i < 5; i++) {
+			Entity e = registry->CreateEntity();
+			registry->AddComponent(e, TransformComponent(float3(1.9f + 1.9f * i, 5 + 2 * i, 0), float3::one(), quaternion::Identity()));
+			registry->AddComponent(e, MeshComponent("Assets/Mesh/cube.obj"));
+			registry->AddComponent(e, MaterialComponent("Assets/Shaders/default.hlsl", "Assets/Textures/White.png", float4(0.1f * i, 0.1f * i, 0.1f * i, 1)));
+			registry->AddComponent(e, ColliderComponent(new BoxColliderData(float3::zero(), float3::one())));
+			registry->AddComponent(e, RigidBodyComponent());
+		}
 
 		Entity plane = registry->CreateEntity();
-		registry->AddComponent(plane, new TransformComponent(float3(0, -1.1f, 0), float3(10, 1, 10), quaternion::Identity()));
-		registry->AddComponent(plane, new MeshComponent("Assets/Mesh/plane.obj"));
-		registry->AddComponent(plane, new MaterialComponent("Assets/Shaders/default.hlsl"));
+		registry->AddComponent(plane, TransformComponent(float3(0, 0, 0), float3(10, 1, 10), quaternion::Identity()));
+		registry->AddComponent(plane, MeshComponent("Assets/Mesh/plane.obj"));
+		registry->AddComponent(plane, MaterialComponent("Assets/Shaders/default.hlsl", "Assets/Textures/Cat.png"));
 	}
 };

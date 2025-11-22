@@ -71,12 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(IncludePath);$(SolutionDir)Dependencies\lua542\include;$(SolutionDir)Dependencies\sol2\include;$(SolutionDir)CORE\include;$(SolutionDir)ENGINE\include</IncludePath>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)Dependencies\lua542\lib;</LibraryPath>
+    <IncludePath>$(IncludePath);$(SolutionDir)Dependencies\lua542\include;$(SolutionDir)Dependencies\sol2\include;$(SolutionDir)CORE\include;$(SolutionDir)ENGINE\include;$(SolutionDir)packages\directxtk_uwp.2025.10.28.2\include;$(SolutionDir)Dependencies\bullet\include</IncludePath>
+    <LibraryPath>$(LibraryPath);$(SolutionDir)Dependencies\lua542\lib;$(SolutionDir)Dependencies\bullet\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(IncludePath);$(SolutionDir)Dependencies\lua542\include;$(SolutionDir)Dependencies\sol2\include;$(SolutionDir)CORE\include;$(SolutionDir)ENGINE\include</IncludePath>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)Dependencies\lua542\lib;</LibraryPath>
+    <IncludePath>$(IncludePath);$(SolutionDir)Dependencies\lua542\include;$(SolutionDir)Dependencies\sol2\include;$(SolutionDir)CORE\include;$(SolutionDir)ENGINE\include;$(SolutionDir)packages\directxtk_uwp.2025.10.28.2\include;$(SolutionDir)Dependencies\bullet\include</IncludePath>
+    <LibraryPath>$(LibraryPath);$(SolutionDir)Dependencies\lua542\lib;$(SolutionDir)Dependencies\bullet\lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -152,9 +152,11 @@
     <ClInclude Include="include\Engine\ECSData.h" />
     <ClInclude Include="include\Engine\Engine.h" />
     <ClInclude Include="include\Engine\EntityManager.h" />
+    <ClInclude Include="include\Engine\EventBus.h" />
     <ClInclude Include="include\Engine\Graphics.h" />
     <ClInclude Include="include\Engine\GraphicsDevice.h" />
     <ClInclude Include="include\Engine\Input.h" />
+    <ClInclude Include="include\Engine\LuaComponentManager.h" />
     <ClInclude Include="include\Engine\Material.h" />
     <ClInclude Include="include\Engine\Mesh.h" />
     <ClInclude Include="include\Engine\PhysicsManager.h" />
@@ -172,6 +174,7 @@
     <ClInclude Include="include\Engine\Shader.h" />
     <ClInclude Include="include\Engine\SystemManager.h" />
     <ClInclude Include="include\Engine\View.h" />
+    <ClInclude Include="include\Engine\ViewLua.h" />
     <ClInclude Include="include\Engine\Window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -180,11 +183,14 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EngineBackend.cpp" />
     <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="EventBus.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="GraphicsDevice.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="LuaComponentManager.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="PhysicsManager.cpp" />
     <ClCompile Include="Registry.cpp" />
     <ClCompile Include="RenderContext.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -198,7 +204,17 @@
     <ClCompile Include="SystemManager.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\directxtk_uwp.2025.10.28.2\build\native\directxtk_uwp.targets" Condition="Exists('..\packages\directxtk_uwp.2025.10.28.2\build\native\directxtk_uwp.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\directxtk_uwp.2025.10.28.2\build\native\directxtk_uwp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtk_uwp.2025.10.28.2\build\native\directxtk_uwp.targets'))" />
+  </Target>
 </Project>

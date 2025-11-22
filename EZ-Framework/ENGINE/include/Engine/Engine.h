@@ -7,6 +7,7 @@
 #include<functional>
 #include"Renderer.h"
 #include"ScriptManager.h"
+#include"PhysicsManager.h"
 #include"Registry.h"
 
 class Engine {
@@ -28,6 +29,7 @@ private:
 	Renderer renderer;
 	GameTime time;
 	ScriptManager scriptManager;
+	PhysicsManager physicsManager;
 	Registry registry;
 
 	Scene* currentScene = nullptr;

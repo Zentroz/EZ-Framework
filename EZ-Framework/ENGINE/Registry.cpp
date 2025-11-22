@@ -4,6 +4,8 @@ Registry::Registry() {
 	componentManager.RegisterComponent<TransformComponent>();
 	componentManager.RegisterComponent<MeshComponent>();
 	componentManager.RegisterComponent<MaterialComponent>();
+	componentManager.RegisterComponent<ColliderComponent>();
+	componentManager.RegisterComponent<RigidBodyComponent>();
 }
 
 Entity Registry::CreateEntity() {
@@ -65,12 +67,12 @@ std::vector<Entity> Registry::GetEntitiesWithComponents(std::vector<ComponentTyp
 std::vector<RenderItem> Registry::CreateRenderList() {
 	std::vector<RenderItem> renderList{};
 
-	for (Entity e : view<TransformComponent, MeshComponent, MaterialComponent>().List()) {
-		MeshComponent* m = GetComponent<MeshComponent>(e);
-		TransformComponent* t = GetComponent<TransformComponent>(e);
-		MaterialComponent* mt = GetComponent<MaterialComponent>(e);
+	for (Entity e : view().Has<TransformComponent, MeshComponent, MaterialComponent>().List()) {
+		MeshComponent& m = GetComponent<MeshComponent>(e);
+		TransformComponent& t = GetComponent<TransformComponent>(e);
+		MaterialComponent& mt = GetComponent<MaterialComponent>(e);
 
-		renderList.push_back(RenderItem(m->path, mt->shaderPath, t->position, t->scale, t->rotation));
+		renderList.push_back(RenderItem(t, mt, m));
 	}
 
 	return renderList;

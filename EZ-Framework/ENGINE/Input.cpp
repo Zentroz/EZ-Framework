@@ -1,7 +1,7 @@
 #include"Engine/Input.h"
 
 void Input::KeyDown(unsigned char keycode) noexcept {
-	if (keycode == VK_ACCEPT) LockCursor(false);
+	if (keycode == 'L') LockCursor(!lockCursor);
 
 	m_keyStates.set(keycode);
 }

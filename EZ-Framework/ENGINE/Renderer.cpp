@@ -72,19 +72,30 @@ void Renderer::Render(const std::vector<RenderItem>& renderList) {
 	ctx->SetTopology();
 
 	for (const RenderItem& item : renderList) {
-		std::shared_ptr<Shader> shader = resources.Load<Shader>(item.shaderPath);
-		std::shared_ptr<Mesh> mesh = resources.Load<Mesh>(item.meshPath);
+		std::shared_ptr<Shader> shader = resources.Load<Shader>(item.material.shaderPath);
+		std::shared_ptr<Mesh> mesh = resources.Load<Mesh>(item.mesh.path);
+		std::shared_ptr<Texture> texture = resources.Load<Texture>(item.material.mainTexturePath);
 
 		perObjectData.model = item.model;
+		perObjectData.color = item.material.baseColor;
 
 		ctx->UpdateMappedSubresource(perObjectBuffer, &perObjectData, sizeof(perObjectData));
-
 
 		ctx->SetInputLayout(shader->GetInputLayout());
 
 		ctx->SetShader(shader.get());
 
+		ID3D11ShaderResourceView* textureSRV = nullptr;
+
+		if (texture != nullptr) {
+			textureSRV = texture->GetSRV();
+			ctx->SetSamplerState(0, texture->GetSamplerAddress());
+		}
+
+		ctx->SetPSShaderResource(0, &textureSRV);
+
 		ctx->SetVSConstantBuffer(perObjectBuffer, 1);
+		ctx->SetPSConstantBuffer(perObjectBuffer, 1);
 		ctx->SetVSConstantBuffer(globalBuffer, 0);
 		ctx->SetPSConstantBuffer(globalBuffer, 0);
 

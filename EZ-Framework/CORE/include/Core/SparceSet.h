@@ -12,18 +12,18 @@ public:
 
     SparseSet(uint32_t capacity, uint8_t paginationSize);
 
-	T* get(uint32_t key) {
+	T& get(uint32_t key) {
 		uint32_t elementIndex = key % paginationSize;
 		uint32_t pageIndex = key / paginationSize;
 
 		if (!pages.contains(pageIndex) || pages[pageIndex][elementIndex] >= capacity) {
-			return nullptr;
+			EXCEPTION(("There is no element for Key: " + std::to_string(key)).c_str());
 		}
 
 		return dense[pages[pageIndex][elementIndex]];
 	}
 
-	void insert(uint32_t key, T* value) {
+	void insert(uint32_t key, T value) {
 		uint32_t elementIndex = key % paginationSize;
 		uint32_t pageIndex = key / paginationSize;
 
@@ -73,7 +73,7 @@ public:
 		size--;
 	}
 
-	std::vector<T*> getAll() {
+	std::vector<T> getAll() const {
 		return dense;
 	}
 
@@ -89,6 +89,15 @@ public:
 		return assignedIndex;
 	}
 
+	bool has(uint32_t key) {
+		uint32_t elementIndex = key % paginationSize;
+		uint32_t pageIndex = key / paginationSize;
+
+		if (!pages.contains(pageIndex) || pages[pageIndex].size() == 0) return false;
+
+		return pages[pageIndex][elementIndex] < capacity;
+	}
+
 	void clear() {
 		pages.clear();
 		dense.clear();
@@ -97,7 +106,7 @@ public:
 
 private:
 	std::unordered_map<uint32_t, std::vector<uint32_t>> pages;
-	std::vector<T*> dense;
+	std::vector<T> dense;
     unsigned int capacity;
 	uint8_t paginationSize;
 };

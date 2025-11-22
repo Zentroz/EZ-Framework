@@ -11,6 +11,7 @@
 #include<d3dcompiler.h>
 #include<d3d11shader.h>
 #include<wrl/client.h>
+#include"WICTextureLoader.h"
 
 // Mesh
 #include <iostream>
@@ -62,6 +63,20 @@ private:
 	ID3D11Buffer* vertexBuffer;
 	ID3D11Buffer* indexBuffer;
 	UINT indexCount;
+};
+
+class Texture : public Resource {
+public:
+	~Texture();
+	bool LoadFromFile(std::string filepath, ID3D11Device* device) override;
+
+	ID3D11ShaderResourceView* GetSRV() { return m_textureSRV.Get(); }
+	ID3D11ShaderResourceView* const* GetSRVAddress() { return m_textureSRV.GetAddressOf(); }
+	ID3D11SamplerState* const* GetSamplerAddress() { return m_samplerState.GetAddressOf(); }
+private:
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_textureSRV;
+	Microsoft::WRL::ComPtr<ID3D11SamplerState> m_samplerState;
+
 };
 
 #endif

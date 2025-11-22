@@ -71,12 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(IncludePath);$(SolutionDir)CORE\include;$(SolutionDir)ENGINE\include;$(SolutionDir)Dependencies\sol2\include;$(SolutionDir)Dependencies\lua542\include</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\lua542\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath);$(SolutionDir)CORE\include;$(SolutionDir)ENGINE\include;$(SolutionDir)Dependencies\sol2\include;$(SolutionDir)Dependencies\lua542\include;$(SolutionDir)packages\directxtk_uwp.2025.10.28.2\include;$(SolutionDir)Dependencies\bullet\include</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\lua542\lib;$(SolutionDir)Dependencies\bullet\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(IncludePath);$(SolutionDir)CORE\include;$(SolutionDir)ENGINE\include;$(SolutionDir)Dependencies\sol2\include;$(SolutionDir)Dependencies\lua542\include</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\lua542\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath);$(SolutionDir)CORE\include;$(SolutionDir)ENGINE\include;$(SolutionDir)Dependencies\sol2\include;$(SolutionDir)Dependencies\lua542\include;$(SolutionDir)packages\directxtk_uwp.2025.10.28.2\include;$(SolutionDir)Dependencies\bullet\include</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\lua542\lib;$(SolutionDir)Dependencies\bullet\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -123,7 +123,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>CORE.lib;ENGINE.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>CORE.lib;ENGINE.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)x64\Debug\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -142,7 +142,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>CORE.lib;ENGINE.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>CORE.lib;ENGINE.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)x64\Debug\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -155,18 +155,29 @@
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Scripts\HealthComponent.lua" />
+    <None Include="Assets\Scripts\MeshRenderer.lua" />
     <None Include="Assets\Scripts\table.lua" />
+    <None Include="Assets\Scripts\Transform.lua" />
     <None Include="Assets\Shaders\Common.hlsl">
       <FileType>Document</FileType>
     </None>
     <None Include="Assets\Shaders\default.hlsl">
       <FileType>Document</FileType>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\test.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\directxtk_uwp.2025.10.28.2\build\native\directxtk_uwp.targets" Condition="Exists('..\packages\directxtk_uwp.2025.10.28.2\build\native\directxtk_uwp.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\directxtk_uwp.2025.10.28.2\build\native\directxtk_uwp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtk_uwp.2025.10.28.2\build\native\directxtk_uwp.targets'))" />
+  </Target>
 </Project>

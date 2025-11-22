@@ -17,6 +17,8 @@ public:
     void SetTopology();
     void SetRasteriser(ID3D11RasterizerState* state);
     void SetViewport();
+    void SetSamplerState(UINT slot, ID3D11SamplerState* const* samplerState);
+    void SetPSShaderResource(UINT slot, ID3D11ShaderResourceView* const* srv);
     void SetShader(Shader* shader);
     void SetInputLayout(ID3D11InputLayout* layout);
     void UpdateMappedSubresource(ID3D11Buffer* buffer, void* data, size_t dataSize);

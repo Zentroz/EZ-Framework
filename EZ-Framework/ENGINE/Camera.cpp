@@ -1,6 +1,6 @@
 #include"Engine/Camera.h"
 
-Camera::Camera() : position(float3(0, 0, -10)), rotation(quaternion(0, 0, 0, 1)) {}
+Camera::Camera() : position(float3(0, 2, -10)), rotation(quaternion(0, 0, 0, 1)) {}
 
 XMMATRIX Camera::GetViewMatrix() const {
 	float3 forward = rotation.forward();

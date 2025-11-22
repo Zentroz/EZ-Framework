@@ -1,9 +1,22 @@
-camSpeed = 5
-camRotationSpeed = 12
+local camSpeed = 5
+local camRotationSpeed = 12
+local deg2rad = math.pi / 180
 
-deg2rad = math.pi / 180
+local HealthComponent = {
+	health = 100,
+	maxHealth = 1000
+}
+
+function awake()
+	Game.RegisterComponent("Health",  HealthComponent)
+	Game.AddComponent(0, "Health", { health = 1 })
+end
 
 function update()
+
+	-- myTransform = Game.GetComponent(0, "Transform")
+	health = Game.GetComponent(0, "Health")
+
 	move_cam()
 
 end

@@ -1,17 +1,7 @@
 #include"Engine/ScriptManager.h"
 
-ScriptManager::ScriptManager() : scriptsCount(0) {
+ScriptManager::ScriptManager(Registry* registry) : scriptsCount(0), registry(registry) {
 	m_lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::string);
-
-	try {
-		m_lua.safe_script_file("Assets/Scripts/table.lua");
-	}
-	catch (const sol::error& e) {
-		EXCEPTION(e.what());
-	}
-
-	std::string type = m_lua["type"]();
-	int i = 0;
 }
 
 void ScriptManager::Init(Input* input, Camera* camera, Registry* registry) {
@@ -38,6 +28,21 @@ bool ScriptManager::LoadScript(std::string path) {
 
 void ScriptManager::Update() {
 	for (auto& pair : loadedScripts) {
+		if (!calledAwake) {
+			sol::function awakeFunc = pair.second["awake"];
+
+			if (awakeFunc.valid()) {
+				try {
+					awakeFunc();
+				}
+				catch (const sol::error& e) {
+					EXCEPTION(e.what());
+				}
+			}
+
+			calledAwake = true;
+		}
+
 		sol::function updateFunc = pair.second["update"];
 
 		if (updateFunc.valid()) {
@@ -55,8 +60,8 @@ void ScriptManager::RegisterWrapperFunctions(Input* input, Camera* camera, Regis
 	// Math
 	RegisterMathWrappers();
 
-	// Transform
-	RegisterComponentWrappers();
+	// Engine Components
+	RegisterEngineComponent(registry);
 	
 	// Physics
 	// Material
@@ -93,66 +98,41 @@ void ScriptManager::RegisterECSWrappers(Registry* registry) {
 		}
 	);
 
+	game.set_function("RegisterComponent",
+		[registry](std::string name, sol::table component) {
+			registry->RegisterLuaComponent(name, component);
+		}
+	);
+
 	game.set_function("AddComponent",
-		[registry](int id, sol::object const& obj) {
-			if (obj.is<TransformComponent>()) {
-				TransformComponent t = obj.as<TransformComponent>();
-				registry->AddComponent(id, &t);
-			}
-			else {
-				EXCEPTION("Component type not recognized");
-			}
+		[registry](Entity entity, std::string component, sol::table args) {
+			registry->AddLuaComponent(entity, component, args);
 		}
-	);
-
-	game.set_function("GetEntitiesWithComponents",
-		[registry](sol::table tab) {
-			std::vector<int> components{};
-
-			for (size_t i = 1; i <= tab.size(); i++)
-			{
-				components.push_back(tab[i].get_or(-1));
-			}
-
-			return registry->CreateEntity();
-		}
-	);
-
-	enum LuaComponent
-	{
-		Transform
-	};
-
-	m_lua.new_enum("Component",
-		"Transform", LuaComponent::Transform
 	);
 
 	sol::state* lua = &m_lua;
 
 	game.set_function("GetComponent",
-		[lua, registry](int id, LuaComponent component) {
-			sol::state_view view(*lua);
-			IComponent* comp = nullptr;
-			if (component == Transform) {
-				comp = registry->GetComponent<TransformComponent>(id);
-			}
-			else {
-				EXCEPTION(("There is no Component: " + std::to_string(component)).c_str());
+		[registry, lua](Entity entity, std::string component) {
+			if (component == "Transform") {
+				return sol::make_object(lua->lua_state(), registry->GetComponent<TransformComponent>(entity));
 			}
 
-			if (comp == nullptr) {
-				EXCEPTION(("Entity does not have Component: " + std::to_string(component)).c_str());
+			sol::table& comp = registry->GetLuaComponent(entity, component);
+
+			for (auto& [key, value] : comp) {
+				int i = 0;
 			}
 
-			return sol::make_object(view.lua_state(), comp);
+			return sol::make_object(lua->lua_state(), comp);
 		}
 	);
 }
 
-void ScriptManager::RegisterComponentWrappers() {
-	m_lua.new_usertype<IComponent>("Component");
+void ScriptManager::RegisterEngineComponent(Registry* registry) {
+	//m_lua.new_usertype<IComponent>("IComponent");
 
-	TransformComponent::RegisterLuaWrapper(m_lua);
+	TransformComponent::RegisterWrapper(&m_lua);
 }
 
 void ScriptManager::RegisterCameraWrappers(Camera* camera) {

@@ -1,15 +1,7 @@
 #include"Engine/ComponentManager.h"
 
-ComponentArray<IComponent>* ComponentManager::GetComponentArray(ComponentType type) {
-	if (type >= m_componentCount) return nullptr;
+bool ComponentManager::HasComponent(Entity entity, ComponentType type) {
+	ComponentArray<IComponent>* componentArray = GetComponentArray<IComponent>();
 
-	ComponentArray<IComponent>* componentArray = &m_componentArrays[type];
-
-	return componentArray;
-}
-
-bool ComponentManager::HasComponent(unsigned int entity, ComponentType type) {
-	ComponentArray<IComponent>* componentArray = GetComponentArray(type);
-
-	return componentArray->GetData(entity) != nullptr;
+	return componentArray->Has(entity);
 }

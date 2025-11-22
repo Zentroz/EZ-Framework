@@ -6,31 +6,35 @@
 #include<iostream>
 #include<unordered_map>
 #include<string>
-#include<bitset>
 #include"ECSData.h"
 #include"ECSComponents.h"
 
+class IComponentArray {
+public:
+	virtual ~IComponentArray() = default;
+	virtual void RemoveData(Entity entity) = 0;
+	virtual bool Has(Entity entity) = 0;
+	virtual std::vector<Entity> GetAssignedEntities() = 0;
+};
 
 template<typename T>
-class ComponentArray {
+class ComponentArray : public IComponentArray {
 public:
-	virtual ~ComponentArray() = default;
+	ComponentArray() : set(MAX_ENTITIES, 10) {}
 
-	ComponentArray() : set(MAX_ENTITIES, 5) {}
-
-	void InsertData(uint32_t entity, T* component) {
+	void InsertData(uint32_t entity, T component) {
 		set.insert(entity, component);
 	}
 
-	void RemoveData(uint32_t entity) {
+	void RemoveData(uint32_t entity) override {
 		set.remove(entity);
 	}
 
-	T* GetData(uint32_t entity) {
+	T& GetData(uint32_t entity) {
 		return set.get(entity);
 	}
 
-	std::vector<T*> GetAllData() {
+	std::vector<T> GetAllData() const {
 		return set.getAll();
 	}
 
@@ -38,11 +42,13 @@ public:
 		set.clear();
 	}
 
-	std::vector<Entity> GetAssignedEntities() {
+	bool Has(Entity entity) override { return set.has(entity); }
+
+	std::vector<Entity> GetAssignedEntities() override {
 		std::vector<Entity> entities;
 
-		for (IComponent* component : set.getAll()) {
-			entities.push_back(component->entity);
+		for (T component : set.getAll()) {
+			entities.push_back(component.entity);
 		}
 
 		return entities;
@@ -62,8 +68,7 @@ public:
 
 	inline int GetComponentCount() const { return m_componentCount; }
 
-	bool HasComponent(unsigned int entity, ComponentType type);
-	ComponentArray<IComponent>* GetComponentArray(ComponentType type);
+	bool HasComponent(Entity entity, ComponentType type);
 
 	template<typename T>
 	void RegisterComponent();
@@ -72,33 +77,17 @@ public:
 	ComponentType GetComponentType();
 
 	template<typename T>
-	std::vector<T*> GetAllComponentsOfType() {
+	void AddComponent(Entity entity, T component) {
 		ComponentType type = GetComponentType<T>();
-		ComponentArray<IComponent>* componentArray = GetComponentArray(type);
-		if (componentArray == nullptr) {
-			EXCEPTION("Component Array not found.");
-			return {};
-		}
-		std::vector<T*> components;
-		for (IComponent* comp : componentArray->GetAllData()) {
-			components.push_back(static_cast<T*>(comp));
-		}
-
-		return components;
-	}
-
-	template<typename T>
-	void AddComponent(uint32_t entity, T* component) {
-		ComponentType type = GetComponentType<T>();
-		ComponentArray<IComponent>* componentArray = GetComponentArray(type);
+		ComponentArray<T>* componentArray = GetComponentArray<T>();
 		if (componentArray == nullptr) {
 			EXCEPTION("Component Array not found.");
 			return;
 		}
 
-		component->entity = entity;
+		component.entity = entity;
 
-		componentArray->InsertData(entity, static_cast<IComponent*>(component));
+		componentArray->InsertData(entity, component);
 	}
 
 	template<typename T>
@@ -114,41 +103,43 @@ public:
 	}
 
 	template<typename T>
-	T* GetComponent(Entity entity) {
-		ComponentType type = GetComponentType<T>();
-		ComponentArray<IComponent>* componentArray = GetComponentArray(type);
+	T& GetComponent(Entity entity) {
+		ComponentArray<T>* componentArray = GetComponentArray<T>();
 
 		if (componentArray == nullptr) {
 			EXCEPTION("Component Array not found.");
-			
-			return {};
 		}
 
-		T* component = static_cast<T*>(componentArray->GetData(entity));
+		T& data = componentArray->GetData(entity);
 
-		return component;
+		return static_cast<T&>(data);
 	}
 
 	template<typename T>
 	bool HasComponent(uint32_t entity) {
 		ComponentType type = GetComponentType<T>();
 
-		ComponentArray<IComponent>* componentArray = GetComponentArray(type);
+		ComponentArray<T>* componentArray = GetComponentArray<T>();
 
-		return componentArray->GetData(entity) != nullptr;
+		return componentArray->Has(entity);
 	}
 
 	template<typename T>
-	ComponentArray<IComponent>* GetComponentArray() {
+	ComponentArray<T>* GetComponentArray() {
 		ComponentType type = GetComponentType<T>();
 
-		return &m_componentArrays[type];
+		if (type >= m_componentArrays.size()) {
+			EXCEPTION("Component is not registered!");
+			return nullptr;
+		}
+
+		return static_cast<ComponentArray<T>*>(m_componentArrays[type]);
 	}
 
 
 private:
 	std::unordered_map<std::string, ComponentType> m_componentTypes{};
-	std::vector<ComponentArray<IComponent>> m_componentArrays{};
+	std::vector<IComponentArray*> m_componentArrays{};
 	ComponentType m_componentCount = 0;
 };
 
@@ -165,7 +156,7 @@ void ComponentManager::RegisterComponent() {
 	ComponentType newType = static_cast<ComponentType>(m_componentCount);
 
 	m_componentTypes.insert({ typeName, newType });
-	m_componentArrays.push_back({});
+	m_componentArrays.push_back(new ComponentArray<T>());
 	m_componentCount++;
 }
 

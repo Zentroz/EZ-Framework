@@ -52,6 +52,9 @@
     <Filter Include="Header Files\Physics">
       <UniqueIdentifier>{c07a6fe2-ca0a-4e0b-995e-830551598390}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{8e89a98c-1a32-42f0-8780-a9e6e0b349e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Engine\Input.h">
@@ -138,6 +141,15 @@
     <ClInclude Include="include\Engine\View.h">
       <Filter>Header Files\Game Architecture\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="include\Engine\LuaComponentManager.h">
+      <Filter>Header Files\Game Architecture\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\ViewLua.h">
+      <Filter>Header Files\Game Architecture\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\EventBus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Window.cpp">
@@ -206,5 +218,17 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LuaComponentManager.cpp">
+      <Filter>Source Files\Game Architecture\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsManager.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="EventBus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
