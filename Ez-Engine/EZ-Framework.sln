@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Externals", "Externals", "{C2B28EB3-2E3E-FC77-374F-7F6CA3595878}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "Ez-Engine\externals\imgui\ImGui.vcxproj", "{C0FF640D-2C14-8DBE-F595-301E616989EF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ez-Editor", "Ez-Editor\Ez-Editor.vcxproj", "{D836441F-44A1-F895-8DDF-A93BF988D6EA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ez-Engine", "Ez-Engine\Ez-Engine.vcxproj", "{27E4F71F-934E-AC96-DC8C-5D3C48368AEB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Debug|x64.ActiveCfg = Debug|x64
+		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Debug|x64.Build.0 = Debug|x64
+		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Release|x64.ActiveCfg = Release|x64
+		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Release|x64.Build.0 = Release|x64
+		{D836441F-44A1-F895-8DDF-A93BF988D6EA}.Debug|x64.ActiveCfg = Debug|x64
+		{D836441F-44A1-F895-8DDF-A93BF988D6EA}.Debug|x64.Build.0 = Debug|x64
+		{D836441F-44A1-F895-8DDF-A93BF988D6EA}.Release|x64.ActiveCfg = Release|x64
+		{D836441F-44A1-F895-8DDF-A93BF988D6EA}.Release|x64.Build.0 = Release|x64
+		{27E4F71F-934E-AC96-DC8C-5D3C48368AEB}.Debug|x64.ActiveCfg = Debug|x64
+		{27E4F71F-934E-AC96-DC8C-5D3C48368AEB}.Debug|x64.Build.0 = Debug|x64
+		{27E4F71F-934E-AC96-DC8C-5D3C48368AEB}.Release|x64.ActiveCfg = Release|x64
+		{27E4F71F-934E-AC96-DC8C-5D3C48368AEB}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C0FF640D-2C14-8DBE-F595-301E616989EF} = {C2B28EB3-2E3E-FC77-374F-7F6CA3595878}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{3824E0A7-24C6-0A7E-0D81-1ED2F9C191CE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ECS">
+      <UniqueIdentifier>{60E1870B-CCEA-877C-5566-9E7CC16E937C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ParticleManager">
+      <UniqueIdentifier>{94278148-00B3-EE0C-09C4-710175CE4A0D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{888B590D-F46A-D8A8-FD82-637F69E13E0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{C5BB87CE-B15D-B2A4-9A18-C6F8865939F5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\Backend">
+      <UniqueIdentifier>{7CB7EF11-6885-E317-5119-543E3D86BF7C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\Frontend">
+      <UniqueIdentifier>{7449C839-E0D4-35FE-E9E5-B8F255F091FE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\Frontend\RenderPasses">
+      <UniqueIdentifier>{12BD9262-FE77-820E-A72F-FB5893C9CC9E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripting">
+      <UniqueIdentifier>{985A7358-04C5-27CF-4D03-D974B9AC0524}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Engine\Assets\AssetManager.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Assets\Assets.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\ChiliWin.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\ErrorHandler.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\EventBus.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\GameTime.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\Logger.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\Math.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\Random.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\SparceSet.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\ECS\ComponentManager.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\ECS\ECSComponents.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\ECS\ECSData.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\ECS\EntityManager.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\ECS\Registry.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\ECS\SystemManager.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\ECS\View.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Engine.h" />
+    <ClInclude Include="src\Engine\ParticleManager\ParticleManager.h">
+      <Filter>ParticleManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\Collision.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Physics\PhysicsManager.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\Backend\EngineBackend.h">
+      <Filter>Render\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\Backend\GraphicsDevice.h">
+      <Filter>Render\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\Backend\Input.h">
+      <Filter>Render\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\Backend\Window.h">
+      <Filter>Render\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\Frontend\Camera.h">
+      <Filter>Render\Frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\Frontend\Material.h">
+      <Filter>Render\Frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\Frontend\RenderItem.h">
+      <Filter>Render\Frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\Frontend\RenderPass.h">
+      <Filter>Render\Frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\Frontend\RenderPasses\DebugRenderPass.h">
+      <Filter>Render\Frontend\RenderPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\Frontend\RenderPasses\SceneRenderPass.h">
+      <Filter>Render\Frontend\RenderPasses</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\Frontend\Renderer.h">
+      <Filter>Render\Frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\Frontend\ResourceManager.h">
+      <Filter>Render\Frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\Frontend\Resources.h">
+      <Filter>Render\Frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\PipelineStateManager.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\RenderContext.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\RenderTarget.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\Scene.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Scripting\ScriptManager.h">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Scripting\ScriptObject.h">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Layer\Layer.h" />
+    <ClInclude Include="src\Engine\Layer\LayerStack.h" />
+    <ClInclude Include="src\Engine\Layer\ImGuiLayer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Engine\Assets\Asset.cpp">
+      <Filter>Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Assets\AssetManager.cpp">
+      <Filter>Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Core\EventBus.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Core\GameTime.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Core\Logger.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Core\Random.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\ECS\ECSComponents.cpp">
+      <Filter>ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\ECS\EntityManager.cpp">
+      <Filter>ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\ECS\Registry.cpp">
+      <Filter>ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\ECS\SystemManager.cpp">
+      <Filter>ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Engine.cpp" />
+    <ClCompile Include="src\Engine\Physics\PhysicsManager.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Render\Backend\EngineBackend.cpp">
+      <Filter>Render\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Render\Backend\GraphicsDevice.cpp">
+      <Filter>Render\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Render\Backend\Input.cpp">
+      <Filter>Render\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Render\Backend\Window.cpp">
+      <Filter>Render\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Render\Frontend\Camera.cpp">
+      <Filter>Render\Frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Render\Frontend\Material.cpp">
+      <Filter>Render\Frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Render\Frontend\RenderPass.cpp">
+      <Filter>Render\Frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Render\Frontend\Renderer.cpp">
+      <Filter>Render\Frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Render\Frontend\ResourceManager.cpp">
+      <Filter>Render\Frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Render\Frontend\Resources.cpp">
+      <Filter>Render\Frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Render\RenderContext.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Render\RenderTarget.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Scripting\InternalCalls.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Scripting\ScriptManager.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Scripting\ScriptObject.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Layer\ImGuiLayer.cpp" />
+  </ItemGroup>
+</Project>

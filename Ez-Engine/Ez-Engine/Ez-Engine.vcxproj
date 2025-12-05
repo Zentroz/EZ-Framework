@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{27E4F71F-934E-AC96-DC8C-5D3C48368AEB}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Ez-Engine</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(ProjectDir)..\bin\Debug-windows-x86_64\Ez-Engine\</OutDir>
+    <IntDir>$(ProjectDir)..\bin-int\Debug-windows-x86_64\Ez-Engine\</IntDir>
+    <TargetName>Ez-Engine</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(ProjectDir)..\bin\Release-windows-x86_64\Ez-Engine\</OutDir>
+    <IntDir>$(ProjectDir)..\bin-int\Release-windows-x86_64\Ez-Engine\</IntDir>
+    <TargetName>Ez-Engine</TargetName>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>src;externals\bullet\include;externals\mono\include;externals\imgui\include;..\packages\directxtk_uwp.2025.10.28.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>mono-2.0-sgen.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>externals\bullet\lib;externals\mono\lib;externals\dxtk\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>src;externals\bullet\include;externals\mono\include;externals\imgui\include;..\packages\directxtk_uwp.2025.10.28.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>mono-2.0-sgen.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>externals\bullet\lib;externals\mono\lib;externals\dxtk\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Engine\Assets\AssetManager.h" />
+    <ClInclude Include="src\Engine\Assets\Assets.h" />
+    <ClInclude Include="src\Engine\Core\ChiliWin.h" />
+    <ClInclude Include="src\Engine\Core\ErrorHandler.h" />
+    <ClInclude Include="src\Engine\Core\EventBus.h" />
+    <ClInclude Include="src\Engine\Core\GameTime.h" />
+    <ClInclude Include="src\Engine\Core\Logger.h" />
+    <ClInclude Include="src\Engine\Core\Math.h" />
+    <ClInclude Include="src\Engine\Core\Random.h" />
+    <ClInclude Include="src\Engine\Core\SparceSet.h" />
+    <ClInclude Include="src\Engine\ECS\ComponentManager.h" />
+    <ClInclude Include="src\Engine\ECS\ECSComponents.h" />
+    <ClInclude Include="src\Engine\ECS\ECSData.h" />
+    <ClInclude Include="src\Engine\ECS\EntityManager.h" />
+    <ClInclude Include="src\Engine\ECS\Registry.h" />
+    <ClInclude Include="src\Engine\ECS\SystemManager.h" />
+    <ClInclude Include="src\Engine\ECS\View.h" />
+    <ClInclude Include="src\Engine\Engine.h" />
+    <ClInclude Include="src\Engine\Layer\ImGuiLayer.h" />
+    <ClInclude Include="src\Engine\Layer\Layer.h" />
+    <ClInclude Include="src\Engine\Layer\LayerStack.h" />
+    <ClInclude Include="src\Engine\ParticleManager\ParticleManager.h" />
+    <ClInclude Include="src\Engine\Physics\Collision.h" />
+    <ClInclude Include="src\Engine\Physics\PhysicsManager.h" />
+    <ClInclude Include="src\Engine\Render\Backend\EngineBackend.h" />
+    <ClInclude Include="src\Engine\Render\Backend\GraphicsDevice.h" />
+    <ClInclude Include="src\Engine\Render\Backend\Input.h" />
+    <ClInclude Include="src\Engine\Render\Backend\Window.h" />
+    <ClInclude Include="src\Engine\Render\Frontend\Camera.h" />
+    <ClInclude Include="src\Engine\Render\Frontend\Material.h" />
+    <ClInclude Include="src\Engine\Render\Frontend\RenderItem.h" />
+    <ClInclude Include="src\Engine\Render\Frontend\RenderPass.h" />
+    <ClInclude Include="src\Engine\Render\Frontend\RenderPasses\DebugRenderPass.h" />
+    <ClInclude Include="src\Engine\Render\Frontend\RenderPasses\SceneRenderPass.h" />
+    <ClInclude Include="src\Engine\Render\Frontend\Renderer.h" />
+    <ClInclude Include="src\Engine\Render\Frontend\ResourceManager.h" />
+    <ClInclude Include="src\Engine\Render\Frontend\Resources.h" />
+    <ClInclude Include="src\Engine\Render\PipelineStateManager.h" />
+    <ClInclude Include="src\Engine\Render\RenderContext.h" />
+    <ClInclude Include="src\Engine\Render\RenderTarget.h" />
+    <ClInclude Include="src\Engine\Render\Scene.h" />
+    <ClInclude Include="src\Engine\Scripting\ScriptManager.h" />
+    <ClInclude Include="src\Engine\Scripting\ScriptObject.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Engine\Assets\Asset.cpp" />
+    <ClCompile Include="src\Engine\Assets\AssetManager.cpp" />
+    <ClCompile Include="src\Engine\Core\EventBus.cpp" />
+    <ClCompile Include="src\Engine\Core\GameTime.cpp" />
+    <ClCompile Include="src\Engine\Core\Logger.cpp" />
+    <ClCompile Include="src\Engine\Core\Random.cpp" />
+    <ClCompile Include="src\Engine\ECS\ECSComponents.cpp" />
+    <ClCompile Include="src\Engine\ECS\EntityManager.cpp" />
+    <ClCompile Include="src\Engine\ECS\Registry.cpp" />
+    <ClCompile Include="src\Engine\ECS\SystemManager.cpp" />
+    <ClCompile Include="src\Engine\Engine.cpp" />
+    <ClCompile Include="src\Engine\Layer\ImGuiLayer.cpp" />
+    <ClCompile Include="src\Engine\Physics\PhysicsManager.cpp" />
+    <ClCompile Include="src\Engine\Render\Backend\EngineBackend.cpp" />
+    <ClCompile Include="src\Engine\Render\Backend\GraphicsDevice.cpp" />
+    <ClCompile Include="src\Engine\Render\Backend\Input.cpp" />
+    <ClCompile Include="src\Engine\Render\Backend\Window.cpp" />
+    <ClCompile Include="src\Engine\Render\Frontend\Camera.cpp" />
+    <ClCompile Include="src\Engine\Render\Frontend\Material.cpp" />
+    <ClCompile Include="src\Engine\Render\Frontend\RenderPass.cpp" />
+    <ClCompile Include="src\Engine\Render\Frontend\Renderer.cpp" />
+    <ClCompile Include="src\Engine\Render\Frontend\ResourceManager.cpp" />
+    <ClCompile Include="src\Engine\Render\Frontend\Resources.cpp" />
+    <ClCompile Include="src\Engine\Render\RenderContext.cpp" />
+    <ClCompile Include="src\Engine\Render\RenderTarget.cpp" />
+    <ClCompile Include="src\Engine\Scripting\InternalCalls.cpp" />
+    <ClCompile Include="src\Engine\Scripting\ScriptManager.cpp" />
+    <ClCompile Include="src\Engine\Scripting\ScriptObject.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="externals\imgui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
