@@ -10,6 +10,7 @@ class ImGuiLayer {
 public:
 
 	static void Setup();
+	static void Destroy();
 	static void NewFrame();
 	static void EndFrame();
 

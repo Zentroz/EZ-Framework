@@ -75,9 +75,9 @@ namespace ENGINE {
 		void PhysicsManager::Update(ECS::Registry* registry) {
 			float dt = GameTime::deltaTime > 0.05f ? 0.05f : GameTime::deltaTime;
 
-			std::vector<Entity> physicsEntities = registry->view().Has<ECS::TransformComponent, ECS::RigidBodyComponent, ECS::ColliderComponent>().List();
+			std::vector<uint64_t> physicsEntities = registry->view().Has<ECS::TransformComponent, ECS::RigidBodyComponent, ECS::ColliderComponent>().List();
 
-			for (Entity e : physicsEntities) {
+			for (uint64_t e : physicsEntities) {
 				ECS::TransformComponent t = registry->GetComponent<ECS::TransformComponent>(e);
 				ECS::RigidBodyComponent r = registry->GetComponent<ECS::RigidBodyComponent>(e);
 				ECS::ColliderComponent c = registry->GetComponent<ECS::ColliderComponent>(e);
@@ -98,7 +98,7 @@ namespace ENGINE {
 				OutputDebugStringA(("Delta: " + std::to_string(dt) + ", SimTimer : " + std::to_string(simTimer) + ", SimInterval: " + std::to_string(simTimeInterval) + "\n").c_str());
 			}*/
 
-			for (Entity e : physicsEntities) {
+			for (uint64_t e : physicsEntities) {
 				ECS::TransformComponent& t = registry->GetComponent<ECS::TransformComponent>(e);
 				ECS::RigidBodyComponent& r = registry->GetComponent<ECS::RigidBodyComponent>(e);
 				ECS::ColliderComponent& c = registry->GetComponent<ECS::ColliderComponent>(e);

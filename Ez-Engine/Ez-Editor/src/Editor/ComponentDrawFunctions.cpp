@@ -2,7 +2,7 @@
 
 namespace EDITOR {
 	void DrawTransform(ComponentUIDrawInput& input) {
-		TransformComponent& t = input.registry->GetComponent<TransformComponent>(input.entity);
+		TransformComponent& t = input.registry.GetComponent<TransformComponent>(input.entity);
 
 		if (ImGui::CollapsingHeader("Transform Component")) {
 			// Position
@@ -40,22 +40,24 @@ namespace EDITOR {
 
 	void DrawMeshComponent(ComponentUIDrawInput& input) {
 		if (ImGui::CollapsingHeader("Mesh Component")) {
-			MeshComponent& m = input.registry->GetComponent<MeshComponent>(input.entity);
+			MeshComponent& m = input.registry.GetComponent<MeshComponent>(input.entity);
 
 			ImGui::Text("Mesh: ");
 			ImGui::SameLine();
 
-			if (m.assetId != UINT16_MAX) {
+			//input.assetManager->GetAsset(assetmana);
 
-				ImGui::Button((std::to_string(m.assetId) + "##MeshAssetIdBtn").c_str());
+			if (!m.assetId.isNull()) {
+
+				ImGui::Button("Assigned##MeshAssetIdBtn");
 			}
 			else ImGui::Button("Unassigned##MeshAssetIdBtn");
 
 			if (ImGui::BeginDragDropTarget()) {
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_ID_PAYLOAD")) {
-					uint16_t droppedID = *(uint16_t*)payload->Data;
-					if (input.assetManager->GetAssetType(droppedID) == AssetType::MESH) {
-						m.assetId = droppedID;
+					std::string droppedID = (const char*)payload->Data;
+					if (input.assetManager.GetAssetType(droppedID) == AssetType::MESH) {
+						m.assetId = EUID(droppedID);
 					}
 				}
 				ImGui::EndDragDropTarget();
@@ -65,21 +67,21 @@ namespace EDITOR {
 
 	void DrawMaterialComponent(ComponentUIDrawInput& input) {
 		if (ImGui::CollapsingHeader("Material Component")) {
-			MaterialComponent& m = input.registry->GetComponent<MaterialComponent>(input.entity);
+			MaterialComponent& m = input.registry.GetComponent<MaterialComponent>(input.entity);
 
 			ImGui::Text("Shader: ");
 			ImGui::SameLine();
 
-			if (m.shaderAssetId != UINT16_MAX) {
-				ImGui::Button((std::to_string(m.shaderAssetId) + "##ShaderAssetIdBtn").c_str());
+			if (!m.shaderAssetId.isNull()) {
+				ImGui::Button("Assgined##ShaderAssetIdBtn");
 			}
 			else ImGui::Button("Unassigned##ShaderAssetIdBtn");
 
 			if (ImGui::BeginDragDropTarget()) {
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_ID_PAYLOAD")) {
-					uint16_t droppedID = *(uint16_t*)payload->Data;
-					if (input.assetManager->GetAssetType(droppedID) == AssetType::SHADER) {
-						m.shaderAssetId = droppedID;
+					std::string droppedID = (const char*)payload->Data;
+					if (input.assetManager.GetAssetType(droppedID) == AssetType::SHADER) {
+						m.shaderAssetId = EUID(droppedID);
 					}
 				}
 				ImGui::EndDragDropTarget();
@@ -88,17 +90,18 @@ namespace EDITOR {
 			ImGui::Text("Texture: ");
 			ImGui::SameLine();
 
-			if (m.textureAssetId != UINT16_MAX) {
+			if (!m.textureAssetId.isNull()) {
 
-				ImGui::Button((std::to_string(m.textureAssetId) + "##TextureAssetIdBtn ").c_str());
+				ImGui::Button("Assigned##TextureAssetIdBtn");
 			}
 			else ImGui::Button("Unassigned##TextureAssetIdBtn");
 
 			if (ImGui::BeginDragDropTarget()) {
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_ID_PAYLOAD")) {
-					uint16_t droppedID = *(uint16_t*)payload->Data;
-					if (input.assetManager->GetAssetType(droppedID) == AssetType::TEXTURE) {
-						m.textureAssetId = droppedID;
+					std::string droppedID = (const char*)payload->Data;
+					AssetType assetType = input.assetManager.GetAssetType(droppedID);
+					if (assetType == AssetType::TEXTURE) {
+						m.textureAssetId = EUID(droppedID);
 					}
 				}
 				ImGui::EndDragDropTarget();

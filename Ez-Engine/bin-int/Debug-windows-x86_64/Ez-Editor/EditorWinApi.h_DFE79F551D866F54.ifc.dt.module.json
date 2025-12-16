@@ -1,0 +1,22 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "E:\\My Files\\DirectX\\Dx11\\Projects\\EZ-Framework\\Ez-Engine\\Ez-Editor\\..\\bin-int\\Debug-windows-x86_64\\Ez-Editor\\EditorWinApi.obj",
+            "outputs": [
+                "E:\\My Files\\DirectX\\Dx11\\Projects\\EZ-Framework\\Ez-Engine\\Ez-Editor\\..\\bin-int\\Debug-windows-x86_64\\Ez-Editor\\EditorWinApi.h_DFE79F551D866F54.ifc.dt.module.json",
+                "E:\\My Files\\DirectX\\Dx11\\Projects\\EZ-Framework\\Ez-Engine\\Ez-Editor\\..\\bin-int\\Debug-windows-x86_64\\Ez-Editor\\EditorWinApi.h_DFE79F551D866F54.ifc.dt.d.json",
+                "E:\\My Files\\DirectX\\Dx11\\Projects\\EZ-Framework\\Ez-Engine\\Ez-Editor\\..\\bin-int\\Debug-windows-x86_64\\Ez-Editor\\EditorWinApi.h.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "E:\\My Files\\DirectX\\Dx11\\Projects\\EZ-Framework\\Ez-Engine\\Ez-Editor\\src\\Editor\\Core\\EditorWinApi.h",
+                    "source-path": "e:\\my files\\directx\\dx11\\projects\\ez-framework\\ez-engine\\ez-editor\\src\\editor\\core\\editorwinapi.h",
+                    "lookup-method": "absolute"
+                }
+            ],
+            "requires": []
+        }
+    ]
+}

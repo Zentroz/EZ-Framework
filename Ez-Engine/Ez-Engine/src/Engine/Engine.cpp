@@ -1,10 +1,14 @@
 #include"Engine.h"
+#include"Engine/Serialization/Serializer.h"
+#include"Engine/Serialization/BinarySerializer.h"
+#include"Engine/Assets/MetaFileCache.h"
 
 namespace ENGINE
 {
 	Engine::EngineContext Engine::ctx = {};
 
-	Engine::Engine() {
+	Engine::Engine() : currentScene("New Scene") {
+		currentScene.SetRegistry(&registry);
 		Engine::ctx.SetEngine(this);
 	}
 
@@ -17,8 +21,10 @@ namespace ENGINE
 		ImGuiLayer::Setup();
 
 		resourceManager.SetDevice(backend.GetDevice());
+		resourceManager.SetAssetManager(&assetManager);
 
 		renderer.Init({ backend.GetDevice(), backend.GetRenderContext(), &registry, &assetManager, &resourceManager, initData.width, initData.height });
+		nativeScriptManager.Init();
 
 		time.Start();
 
@@ -26,69 +32,103 @@ namespace ENGINE
 		SCRIPT::ScriptRuntime::SetInput(backend.GetInput());
 		scriptManager.Init();
 
-		Entity cameraEntity = registry.CreateEntity("Camera");
-
-		registry.AddComponent<ECS::TransformComponent>(cameraEntity, ECS::TransformComponent());
 		float aspectRation = (float)initData.width / (float)initData.height;
-		renderer.GetCamera()->AssignEntity(cameraEntity, &registry);
-		renderer.GetCamera()->SetAspectRatio(aspectRation);
+		m_camera.GetCamera().SetAspectRatio(aspectRation);
+		renderer.SetCamera(&m_camera.GetCamera());
 
 		backend.GetInput()->LockCursor(false);
+
+
+		EUID e = currentScene.CreateEntity("TestEntity");
+		registry.AddComponent(e, ECS::TransformComponent(float3::one(), float3::one(), quaternion::Identity()));
 	}
 
 	void Engine::Shutdown() {
+		for (auto layer : layerStack.Layers()) layer->OnDetach();
+		for (auto layer : layerStack.Overlays()) layer->OnDetach();
+
+		ImGuiLayer::Destroy();
 		renderer.Shutdown();
 		backend.Shutdown();
 	}
 
-	void Engine::Run() {
-		bool run = true;
-		while (run) {
-			time.Update();
-			run = backend.Run();
+	void Engine::OnEvent(Event& event) {
+		for (auto layer : layerStack.Layers()) layer->OnEvent(event);
+		for (auto layer : layerStack.Overlays()) layer->OnEvent(event);
 
-			// Layers Update
-			for (auto layer : layerStack.Layers()) {
-				layer->OnUpdate();
-			}
-			for (auto layer : layerStack.Overlays()) {
-				layer->OnUpdate();
-			}
+		m_camera.OnEvent(event);
+	}
 
-			UpdateSystems();
+	void Engine::Tick() {
+		// Get Window's messages
+		backend.Run();
 
-			renderer.InitRender(backend.GetCustomRenderTarget());
-			renderer.Render();
-			// Layers OnRender
-			for (auto layer : layerStack.Layers()) {
-				layer->OnRender();
-			}
-			for (auto layer : layerStack.Overlays()) {
-				layer->OnRender();
-			}
-			renderer.EndRender();
-
-			backend.GetRenderContext()->SetRenderTarget(backend.GetBackRenderTarget()->GetRTV(), nullptr);
-
-			ImGuiLayer::NewFrame();
-			// Layers OnRenderImGui
-			for (auto layer : layerStack.Layers()) {
-				layer->OnRenderImGui();
-			}
-			for (auto layer : layerStack.Overlays()) {
-				layer->OnRenderImGui();
-			}
-			ImGuiLayer::EndFrame();
-
-			backend.PresentFrame();
+		// Update
+		// Layers Update
+		for (auto layer : layerStack.Layers()) {
+			layer->OnUpdate();
 		}
+		for (auto layer : layerStack.Overlays()) {
+			layer->OnUpdate();
+		}
+
+		UpdateSystems();
+
+		// Render Scene
+		renderer.InitRender(backend.GetCustomRenderTarget());
+		renderer.Render();
+		for (auto layer : layerStack.Layers()) {
+			layer->OnRender();
+		}
+		for (auto layer : layerStack.Overlays()) {
+			layer->OnRender();
+		}
+		renderer.EndRender();
+
+		// Set Back buffer as RenderTarget
+		backend.GetRenderContext()->SetRenderTarget(backend.GetBackRenderTarget()->GetRTV(), nullptr);
+
+		// Render UI - ImGui
+		ImGuiLayer::NewFrame();
+		for (auto layer : layerStack.Layers()) {
+			layer->OnRenderImGui();
+		}
+		for (auto layer : layerStack.Overlays()) {
+			layer->OnRenderImGui();
+		}
+		ImGuiLayer::EndFrame();
+
+		backend.PresentFrame();
 	}
 
 	void Engine::UpdateSystems() {
+		time.Update();
+		nativeScriptManager.Update();
 		scriptManager.Update();
-		particleManager.Update(&registry);
+		//particleManager.Update(&registry);
 		physicsManager.Update(&registry);
-		renderer.GetCamera()->SetAspectRatio(ctx.sceneViewportSize.x / ctx.sceneViewportSize.y);
-		renderer.GetCamera()->Update(&registry);
+		m_camera.GetCamera().SetAspectRatio(ctx.sceneViewportSize.x / ctx.sceneViewportSize.y);
+		m_camera.OnUpdate();
+	}
+
+	void Engine::LoadScene(std::string filepath) {
+		Scene loadedScene("Loaded Scene");
+
+		if (!Serializer::Deserialize(filepath.c_str(), loadedScene)) {
+			LOG_ERROR("Failed to load scene");
+			return;
+		}
+
+		registry.Reset();
+		currentScene = loadedScene;
+		currentScene.SetRegistry(&registry);
+	}
+
+	void Engine::SaveProject() {
+		Serializer::SerializeProject(assetManager);
+	}
+
+	void Engine::LoadProject(std::string projectFilePath) {
+		Serializer::DeserializeProject(projectFilePath, assetManager);
 	}
 }

@@ -31,10 +31,10 @@ namespace ENGINE {
 			
 			void RegisterInternalCalls();
 			void LoadGameComponentScripts();
-			void CreateBehviourInstance(Entity entity, std::string key);
+			void CreateBehviourInstance(EUID entity, std::string key);
 
-			void OnEntityCreatedCallback(Entity id);
-			void OnEntityDestroyedCallback(Entity id);
+			void OnEntityCreatedCallback(EUID id);
+			void OnEntityDestroyedCallback(EUID id);
 
 			void Update();
 
@@ -57,7 +57,7 @@ namespace ENGINE {
 			// Loaded Behaviour scripts
 			std::vector<std::unique_ptr<ScriptObject>> m_scripts;
 			std::unordered_map<std::string, MonoClass*> behaviourKlasses;
-			std::unordered_map<Entity, MonoObject*> entityInstancesCS;
+			std::unordered_map<EUID, MonoObject*> entityInstancesCS;
 			static ECS::Registry* registry;
 			static Input* input;
 		};

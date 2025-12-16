@@ -23,11 +23,11 @@ namespace ENGINE {
 			position = position + delta;
 		}
 
-		MeshComponent::MeshComponent() : assetId(UINT16_MAX) {}
-		MeshComponent::MeshComponent(uint16_t assetId) : assetId(assetId) {}
+		MeshComponent::MeshComponent() : assetId("") {}
+		MeshComponent::MeshComponent(EUID assetId) : assetId(assetId) {}
 
 		MaterialComponent::MaterialComponent()
-			: shaderAssetId(UINT16_MAX), textureAssetId(UINT16_MAX), baseColor(float4::one()) {
+			: shaderAssetId(""), textureAssetId(""), baseColor(float4::one()) {
 			baseColor = float4::one();
 			baseColorInput[0] = baseColor.x;
 			baseColorInput[1] = baseColor.y;
@@ -35,7 +35,7 @@ namespace ENGINE {
 			baseColorInput[3] = baseColor.w;
 		}
 
-		MaterialComponent::MaterialComponent(uint16_t shaderAssetId, uint16_t textureAssetId, float4 baseColor)
+		MaterialComponent::MaterialComponent(EUID shaderAssetId, EUID textureAssetId, float4 baseColor)
 			: shaderAssetId(shaderAssetId), textureAssetId(textureAssetId), baseColor(baseColor) {
 			baseColorInput[0] = baseColor.x;
 			baseColorInput[1] = baseColor.y;

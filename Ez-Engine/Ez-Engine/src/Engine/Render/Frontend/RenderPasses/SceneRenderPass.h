@@ -33,26 +33,23 @@ namespace ENGINE {
 				ctx.ctx->SetRasteriser(ctx.pipelineStates->solid);
 
 				PerObjectBuffer perObjectData;
-				uint16_t lastShader = UINT16_MAX;
+				EUID lastShader("");
 
 				ctx.ctx->SetTopology();
 
 				for (const RenderItem& item : ctx.registry->CreateRenderList()) {
-					std::shared_ptr<ASSET::Asset> meshAsset = ctx.assets->GetAsset(item. mesh.assetId);
-					std::shared_ptr<ASSET::Asset> textureAsset = ctx.assets->GetAsset(item.material.textureAssetId);
-
-					std::shared_ptr<Mesh> mesh = ctx.resources->Load<Mesh>(meshAsset);
-					std::shared_ptr<Texture> texture = ctx.resources->Load<Texture>(textureAsset);
+					std::shared_ptr<Mesh> mesh = ctx.resources->Load<Mesh>(item.mesh.assetId);
+					std::shared_ptr<Texture> texture = ctx.resources->Load<Texture>(item.material.textureAssetId);
 
 					perObjectData.model = item.model;
 					perObjectData.color = item.material.baseColor;
 
 					ctx.ctx->UpdateMappedSubresource(perObjectBuffer, &perObjectData, sizeof(perObjectData));
 
-					if (lastShader != item.material.shaderAssetId) {
+					if (lastShader.isNull() || lastShader != item.material.shaderAssetId) {
 						std::shared_ptr<ASSET::Asset> shaderAsset = ctx.assets->GetAsset(item.material.shaderAssetId);
 						if (shaderAsset == nullptr) continue;
-						std::shared_ptr<Shader> shader = ctx.resources->Load<Shader>(shaderAsset);
+						std::shared_ptr<Shader> shader = ctx.resources->Load<Shader>(item.material.shaderAssetId);
 
 						if (shader != nullptr) {
 							ctx.ctx->SetInputLayout(shader->GetInputLayout());
@@ -69,8 +66,8 @@ namespace ENGINE {
 						ctx.ctx->SetPSShaderResource(0, &textureSRV);
 					}
 
-					ctx.ctx->SetVSConstantBuffer(ctx.globalBuffer, 0);
-					ctx.ctx->SetPSConstantBuffer(ctx.globalBuffer, 0);
+					ctx.ctx->SetVSConstantBuffer(ctx.frameBuffer->GetBuffer(), 0);
+					ctx.ctx->SetPSConstantBuffer(ctx.frameBuffer->GetBuffer(), 0);
 					ctx.ctx->SetVSConstantBuffer(perObjectBuffer, 1);
 					ctx.ctx->SetPSConstantBuffer(perObjectBuffer, 1);
 

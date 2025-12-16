@@ -13,6 +13,7 @@
 #include"Engine/Core/Logger.h"
 #include"Engine/Core/ErrorHandler.h"
 #include"Engine/Assets/Assets.h"
+#include"Engine/Utils/EUID.h"
 
 using namespace MATH;
 
@@ -21,7 +22,7 @@ namespace ENGINE {
 
 		class Resource {
 		public:
-			uint16_t assetId;
+			EUID euid;
 
 			virtual ~Resource() = default;
 			virtual bool LoadFromAsset(std::shared_ptr<ASSET::Asset> asset, ID3D11Device* device) = 0;
@@ -44,12 +45,6 @@ namespace ENGINE {
 
 		class Mesh : public Resource {
 		public:
-			struct Vertex {
-				float3 position;
-				float3 normal;
-				float2 uv;
-			};
-
 			~Mesh();
 			bool LoadFromAsset(std::shared_ptr<ASSET::Asset> asset, ID3D11Device* device) override;
 

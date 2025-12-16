@@ -2,14 +2,18 @@
 #define REGISTRY_VIEW_H
 
 #include<tuple>
-#include"ComponentManager.h"
+
+#include"Engine/ECS/EntityManager.h"
+#include"Engine/ECS/ComponentManager.h"
+
 
 namespace ENGINE {
 	namespace ECS {
 
 		struct View {
 		public:
-			View(ComponentManager* componentManager, std::vector<Entity> result) : componentManager(componentManager), result(result) {};
+			View(ComponentManager* componentManager, EntityManager* entityManager, std::vector<uint64_t> result) :
+				componentManager(componentManager), entityManager(entityManager), result(result) { };
 
 			template<typename... Components>
 			View Has() {
@@ -30,8 +34,8 @@ namespace ENGINE {
 					}, pools);
 
 
-				std::vector<Entity> result;
-				for (Entity e : smallest->GetAssignedEntities()) {
+				std::vector<uint64_t> result;
+				for (uint64_t e : smallest->GetAssignedEntities()) {
 					if (((c->HasComponent<Components>(e)) && ...)) {
 						result.push_back(e);
 					}
@@ -39,14 +43,15 @@ namespace ENGINE {
 
 				this->result.clear();
 
-				return View(componentManager, result);
+				return View(componentManager, entityManager, result);
 			}
 
-			std::vector<Entity> List() const { return result; }
+			std::vector<uint64_t> List() const { return result; }
 
 		private:
 			ComponentManager* componentManager;
-			std::vector<Entity> result;
+			EntityManager* entityManager;
+			std::vector<uint64_t> result;
 		};
 
 	}

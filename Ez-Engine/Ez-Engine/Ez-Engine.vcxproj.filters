@@ -10,11 +10,20 @@
     <Filter Include="ECS">
       <UniqueIdentifier>{60E1870B-CCEA-877C-5566-9E7CC16E937C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{3A8963B1-262B-8E87-0FE6-A1DBFB2615D8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Layer">
+      <UniqueIdentifier>{6287950D-CE9B-BDBE-971D-611E03F1B9EF}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ParticleManager">
       <UniqueIdentifier>{94278148-00B3-EE0C-09C4-710175CE4A0D}</UniqueIdentifier>
     </Filter>
     <Filter Include="Physics">
       <UniqueIdentifier>{888B590D-F46A-D8A8-FD82-637F69E13E0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project">
+      <UniqueIdentifier>{5C2CF323-C80B-72BF-D123-FD953D82D820}</UniqueIdentifier>
     </Filter>
     <Filter Include="Render">
       <UniqueIdentifier>{C5BB87CE-B15D-B2A4-9A18-C6F8865939F5}</UniqueIdentifier>
@@ -31,13 +40,40 @@
     <Filter Include="Scripting">
       <UniqueIdentifier>{985A7358-04C5-27CF-4D03-D974B9AC0524}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripting\Native">
+      <UniqueIdentifier>{2EBB0044-1AB4-1F96-43E6-041B2F3EFFA1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serialization">
+      <UniqueIdentifier>{2319AF09-8FD9-2A40-5814-74BDC4936F1C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{F68B420E-62A0-6ABF-2B22-0E1F97F566F0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Engine\Assets\AssetDataTypes.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Assets\AssetImporter.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Assets\AssetLoader.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
     <ClInclude Include="src\Engine\Assets\AssetManager.h">
       <Filter>Assets</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Assets\Assets.h">
       <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Assets\MetaFileCache.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Assets\RawAssets.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\Application.h">
+      <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Core\ChiliWin.h">
       <Filter>Core</Filter>
@@ -49,6 +85,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Core\GameTime.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\KeyCodes.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Core\Logger.h">
@@ -85,6 +124,24 @@
       <Filter>ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Engine.h" />
+    <ClInclude Include="src\Engine\Events\ApplicationEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Events\Event.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Events\InputEvents.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Layer\ImGuiLayer.h">
+      <Filter>Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Layer\Layer.h">
+      <Filter>Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Layer\LayerStack.h">
+      <Filter>Layer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Engine\ParticleManager\ParticleManager.h">
       <Filter>ParticleManager</Filter>
     </ClInclude>
@@ -93,6 +150,9 @@
     </ClInclude>
     <ClInclude Include="src\Engine\Physics\PhysicsManager.h">
       <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Project\Project.h">
+      <Filter>Project</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Render\Backend\EngineBackend.h">
       <Filter>Render\Backend</Filter>
@@ -107,6 +167,12 @@
       <Filter>Render\Backend</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Render\Frontend\Camera.h">
+      <Filter>Render\Frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\Frontend\EditorCamera.h">
+      <Filter>Render\Frontend</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Render\Frontend\FrameDataBuffer.h">
       <Filter>Render\Frontend</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Render\Frontend\Material.h">
@@ -145,22 +211,58 @@
     <ClInclude Include="src\Engine\Render\Scene.h">
       <Filter>Render</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Scripting\Native\NativeScriptManager.h">
+      <Filter>Scripting\Native</Filter>
+    </ClInclude>
     <ClInclude Include="src\Engine\Scripting\ScriptManager.h">
       <Filter>Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Scripting\ScriptObject.h">
       <Filter>Scripting</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Layer\Layer.h" />
-    <ClInclude Include="src\Engine\Layer\LayerStack.h" />
-    <ClInclude Include="src\Engine\Layer\ImGuiLayer.h" />
+    <ClInclude Include="src\Engine\Serialization\AssetSerializer.h">
+      <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Serialization\BinarySerializer.h">
+      <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Serialization\MetaFile.h">
+      <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Serialization\MetaSerializer.h">
+      <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Serialization\Serializer.h">
+      <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Utils\EUID.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Utils\Freelist.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Utils\TypeAlias.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Engine\Assets\Asset.cpp">
       <Filter>Assets</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Assets\AssetImporter.cpp">
+      <Filter>Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Assets\AssetLoader.cpp">
+      <Filter>Assets</Filter>
+    </ClCompile>
     <ClCompile Include="src\Engine\Assets\AssetManager.cpp">
       <Filter>Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Assets\MetaFileCache.cpp">
+      <Filter>Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Core\Application.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Core\EventBus.cpp">
       <Filter>Core</Filter>
@@ -187,8 +289,14 @@
       <Filter>ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Engine.cpp" />
+    <ClCompile Include="src\Engine\Layer\ImGuiLayer.cpp">
+      <Filter>Layer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Engine\Physics\PhysicsManager.cpp">
       <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Project\Project.cpp">
+      <Filter>Project</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Render\Backend\EngineBackend.cpp">
       <Filter>Render\Backend</Filter>
@@ -203,6 +311,9 @@
       <Filter>Render\Backend</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Render\Frontend\Camera.cpp">
+      <Filter>Render\Frontend</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Render\Frontend\EditorCamera.cpp">
       <Filter>Render\Frontend</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Render\Frontend\Material.cpp">
@@ -226,8 +337,14 @@
     <ClCompile Include="src\Engine\Render\RenderTarget.cpp">
       <Filter>Render</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Render\Scene.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
     <ClCompile Include="src\Engine\Scripting\InternalCalls.cpp">
       <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Scripting\Native\NativeScriptManager.cpp">
+      <Filter>Scripting\Native</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Scripting\ScriptManager.cpp">
       <Filter>Scripting</Filter>
@@ -235,6 +352,25 @@
     <ClCompile Include="src\Engine\Scripting\ScriptObject.cpp">
       <Filter>Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\Layer\ImGuiLayer.cpp" />
+    <ClCompile Include="src\Engine\Serialization\AssetSerializer.cpp">
+      <Filter>Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Serialization\BinarySerializer.cpp">
+      <Filter>Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Serialization\MetaSerializer.cpp">
+      <Filter>Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Serialization\ProjectSerialization.cpp">
+      <Filter>Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Serialization\SceneSerializer.cpp">
+      <Filter>Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Utils\EUID.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Scripting\Native\API_Impls\ECS\TransformImpl.cpp" />
+    <ClCompile Include="src\Engine\Scripting\Native\API_Impls\GameObjectImpl.cpp" />
   </ItemGroup>
 </Project>

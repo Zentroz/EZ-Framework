@@ -6,7 +6,10 @@
 
 #include<Engine/Engine.h>
 #include<Engine/Layer/Layer.h>
+
 #include"Editor/ComponentDrawFunctions.h"
+#include"Editor/Panels/AssetBrowser.h"
+#include"Editor/Panels/InspectorPanel.h"
 
 class EditorLayer : public Layer {
 public:
@@ -18,25 +21,14 @@ public:
 	void RenderUI();
 
 private:
-	struct ComponentListItem {
-		std::string name;
-		std::function<void(ENGINE::ECS::Registry*, Entity)> addFunc;
-		std::function<void(EDITOR::ComponentUIDrawInput& input)> drawFunc;
+	// Panels
+	AssetBrowser assetBrowser;
+	InspectorPanel inspectorPanel;
 
-		ComponentListItem() = default;
-		ComponentListItem(std::string name,
-			std::function<void(ENGINE::ECS::Registry*, Entity)> addFunc,
-			std::function<void(EDITOR::ComponentUIDrawInput& input)> drawFunc
-		) : name(name), addFunc(addFunc), drawFunc(drawFunc) {
-		}
-	};
-
-private:
+	EUID selectedEntity;
 	ImVec2 sceneScreenSize;
-	Entity selectedEntity;
 
-	std::vector<ENGINE::ECS::GameEntity*> entities;
-	std::unordered_map<ComponentType, ComponentListItem> componentItems;
+	std::vector<ENGINE::ECS::Entity> entities;
 
 	// Input buffers
 	char textInput[256] = "";

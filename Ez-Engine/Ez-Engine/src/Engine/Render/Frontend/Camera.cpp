@@ -3,7 +3,7 @@
 namespace ENGINE {
 	namespace RENDERER {
 
-		Camera::Camera() : position(MATH::float3(0, 10, -10)), rotation(MATH::quaternion::FromAxisAngle(MATH::float3::right(), 45)), m_entity(UINT32_MAX) {}
+		Camera::Camera() : position(MATH::float3(0, 10, -10)), rotation(MATH::quaternion::FromAxisAngle(MATH::float3::right(), 45)) {}
 
 		XMMATRIX Camera::GetViewMatrix() const {
 			MATH::float3 forward = rotation.forward();
@@ -22,22 +22,6 @@ namespace ENGINE {
 			XMMATRIX projection = XMMatrixPerspectiveFovLH(XMConvertToRadians(60), aspectRatio, 0.1f, 100.0f);
 
 			return projection;
-		}
-
-		void Camera::Update(ECS::Registry* registry) {
-			ECS::TransformComponent& t = registry->GetComponent<ECS::TransformComponent>(m_entity);
-
-			position = t.position;
-			rotation = t.rotation;
-		}
-
-		void Camera::AssignEntity(uint32_t entity, ECS::Registry* registry) {
-			m_entity = entity;
-
-			ECS::TransformComponent& t = registry->GetComponent<ECS::TransformComponent>(m_entity);
-
-			t.position = position;
-			t.rotation = rotation;
 		}
 
 	}

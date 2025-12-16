@@ -13,64 +13,48 @@ namespace ENGINE {
 
 		class Registry {
 		private:
+			using RUID = uint64_t;
+			using ComponentAddFn = void(*)(uint64_t, ComponentManager&);
+
 			struct ComponentBinding {
 			public:
 				ComponentType type;
-				std::function<void(uint32_t)> addFunc;
-				std::function<void(uint32_t)> hasFunc;
+				std::function<void(EUID)> addFunc;
+				std::function<void(EUID)> hasFunc;
 			};
 
 		public:
 			Registry();
 
-			std::vector<Entity> GetAllEntities() {
-				std::vector<Entity> alive;
+			void Reset() {
 
-				for (uint32_t i = 0; i < MAX_ENTITIES; i++) {
-					if (entityManager.IsEntityAlive(i)) {
-						alive.push_back(i);
-					}
-				}
-
-				return alive;
 			}
 
-			std::vector<GameEntity*> GetAllEntitiesData() {
-				std::vector<GameEntity*> alive;
+			void RegisterComponent();
 
-				for (uint32_t i = 0; i < MAX_ENTITIES; i++) {
-					if (entityManager.IsEntityAlive(i)) {
-						alive.push_back(GetGameEntity(i));
-					}
-				}
-
-				return alive;
+			template <typename Func>
+			void Each(Func func) {
+				for (EUID id : entityManager.GetEntities()) func(id);
 			}
+
+			std::vector<uint64_t> GetAllEntityRUIDs();
+			std::vector<Entity> GetAllEntities();
 
 			View view() {
-				return View(&componentManager, GetAllEntities());
+				return View(&componentManager, &entityManager, GetAllEntityRUIDs());
 			}
 
-			Entity CreateEntity(const char* name = nullptr);
-			void DestroyEntity(Entity entity);
-			GameEntity* GetGameEntity(Entity entity) { return entityManager.GetGameEntity(entity); }
-			std::vector<Entity> GetEntitiesWithComponents(ComponentType types[], int length);
-			std::vector<Entity> GetEntitiesWithComponents(std::vector<ComponentType> types);
+			EUID CreateEntity(std::string name);
+			void DestroyEntity(EUID id);
+			Ref<Entity> GetEntity(EUID id);
 
-			std::vector<IComponent*> GetComponentsOfEntity(Entity entity);
+			// For View
+			std::vector<EUID> GetEntitiesWithComponents(ComponentType types[], int length);
+			std::vector<EUID> GetEntitiesWithComponents(std::vector<ComponentType> types);
 
-			std::vector<ComponentType> GetAllComponentTypesOfEntity(Entity entity) {
-				std::vector<ComponentType> types = componentManager.GetAllComponentTypes();
-				std::vector<ComponentType> hasTypes;
-				IComponentArray* arr = nullptr;
-
-				for (auto type : types) {
-					arr = componentManager.GetComponentArray(type);
-					if (arr->Has(entity)) hasTypes.push_back(type);
-				}
-
-				return hasTypes;
-			}
+			// For Rendering Inspector UI
+			std::vector<IComponent*> GetComponentsOfEntity(EUID id);
+			std::vector<ComponentType> GetAllComponentTypesOfEntity(EUID id);
 
 			template<typename T>
 			ComponentType GetComponentType(T) {
@@ -82,20 +66,43 @@ namespace ENGINE {
 				return componentManager.GetComponentType<T>();
 			}
 
+			// Component Manager wrappers
 			template<typename T>
-			void AddComponent(Entity entity, T component) {
-				componentManager.AddComponent(entity, component);
-				EventBus::Emit<ComponentAddedEvent<T>>(ComponentAddedEvent<T>(entity, GetComponent<T>(entity), this));
+			void AddComponent(EUID id) {
+				Ref<Entity> entity = entityManager.GetEntity(id);
+				if (!entity) return;
+				RUID ruid = entity->get().ruid;
+				componentManager.AddComponent(ruid);
+				EventBus::Emit<ComponentAddedEvent<T>>(ComponentAddedEvent<T>(ruid, GetComponent<T>(ruid), this));
 			}
 
 			template<typename T>
-			T& GetComponent(Entity entity) {
-				return componentManager.GetComponent<T>(entity);
+			T& GetComponent(EUID id) {
+				Ref<Entity> entity = entityManager.GetEntity(id);
+				return componentManager.GetComponent<T>(entity->get().ruid);
 			}
 
 			template<typename T>
-			bool Has(Entity entity) {
-				return componentManager.HasComponent<T>(entity);
+			bool Has(EUID id) {
+				Ref<Entity> entity = entityManager.GetEntity(id);
+				if (!entity) return false;
+				return componentManager.HasComponent<T>(entity->get().ruid);
+			}
+
+			template<typename T>
+			void AddComponent(RUID id, T component) {
+				componentManager.AddComponent(id, component);
+				EventBus::Emit<ComponentAddedEvent<T>>(ComponentAddedEvent<T>(id, GetComponent<T>(id), this));
+			}
+
+			template<typename T>
+			T& GetComponent(RUID id) {
+				return componentManager.GetComponent<T>(id);
+			}
+
+			template<typename T>
+			bool Has(RUID id) {
+				return componentManager.HasComponent<T>(id);
 			}
 
 			template<typename T>

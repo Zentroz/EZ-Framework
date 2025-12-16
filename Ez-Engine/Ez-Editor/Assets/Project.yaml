@@ -1,0 +1,8 @@
+Project:
+  Name: MyProject
+  Assets:
+    - EUID: 4f5fbeefbbd1f3c46a61f150a3c9b26a
+      Name: Cat.png
+      Path: Assets/Textures/Cat.png
+      Import Path: <NULL>
+      Type: Texture2D

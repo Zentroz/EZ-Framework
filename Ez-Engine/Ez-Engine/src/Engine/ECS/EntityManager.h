@@ -1,41 +1,48 @@
 #ifndef ENTITY_MANAGER_CLASS_H
 #define ENTITY_MANAGER_CLASS_H
 
-#include<bitset>
 #include<unordered_map>
+#include<bitset>
+#include<optional>
 
+#include"Engine/Core/Logger.h"
 #include"Engine/Core/ErrorHandler.h"
 #include"Engine/ECS/ECSData.h"
+#include"Engine/Utils/EUID.h"
+#include"Engine/Utils/Freelist.h"
+#include"Engine/Utils/TypeAlias.h"
+
+using namespace ENGINE::UTILITY;
 
 namespace ENGINE {
 	namespace ECS {
 
-		struct GameEntity {
-			uint32_t id;
+		struct Entity {
+			uint64_t ruid; // Runtime unique id for accessing Components
+			EUID uid; // Engine unique id for Serialization and Referencing
 			std::string name;
 
-			GameEntity() = default;
-			GameEntity(uint32_t id, std::string name) : id(id), name(name) {}
+			Entity() = default;
+			Entity(uint64_t ruid, EUID uid, std::string name) : ruid(ruid), uid(uid), name(name) {}
 		};
 
 		class EntityManager {
 		public:
 			EntityManager();
 
-			Entity CreateEntity(const char* name = nullptr);
-			void DestroyEntity(Entity entity);
-
-			bool IsEntityAlive(Entity entity) const;
-
-			GameEntity* GetGameEntity(Entity entity) {
-				if (!IsEntityAlive(entity)) return nullptr;
-				return &m_entitiesData[entity];
-			}
+			EUID CreateEntity(std::string name);
+			void DestroyEntity(EUID entity);
+			bool IsEntityAlive(EUID entity);
+			Ref<Entity> GetEntity(EUID entity);
+			Ref<Entity> GetEntity(uint64_t entity);
+			std::vector<EUID> GetEntities();
+			size_t AliveCount();
 
 		private:
-			std::bitset<MAX_ENTITIES> m_entities{};
-			std::unordered_map<Entity, GameEntity> m_entitiesData{};
-			unsigned int entitiesAlive;
+			void AddRuntimeIDs();
+			std::unordered_map<EUID, Entity> m_entities{};
+			FreeList<uint64_t> m_RuntimeIDs;
+			size_t entitiesAlive;
 		};
 
 	}

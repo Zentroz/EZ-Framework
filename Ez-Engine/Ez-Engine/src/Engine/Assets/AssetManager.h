@@ -5,26 +5,25 @@
 #include<string>
 #include<iostream>
 
+#include"Engine/Utils/EUID.h"
 #include"Engine/Core/Logger.h"
 #include"Engine/Assets/Assets.h"
+#include"Engine/Assets/MetaFileCache.h"
 
 namespace ENGINE {
 	namespace ASSET {
 
 		class AssetManager {
 		public:
-			AssetManager() = default;
+			AssetManager();
 
-			bool HasAsset(std::string path, size_t& index);
-			bool HasAsset(uint16_t id, size_t& index);
-			uint16_t GetIdFromName(std::string name);
-			bool LoadAsset(std::string path);
+			bool HasAsset(EUID id, size_t& index);
 
-			std::shared_ptr<Asset> GetAsset(uint16_t id);
-			AssetType GetAssetType(uint16_t id);
+			std::shared_ptr<Asset> GetAsset(EUID id);
+			AssetType GetAssetType(EUID id);
 
 			template <typename T>
-			std::shared_ptr<T> GetAssetAs(uint16_t id) {
+			std::shared_ptr<T> GetAssetAs(EUID id) {
 				size_t hasIndex = 0;
 				if (HasAsset(id, hasIndex)) {
 					return std::static_pointer_cast<T>(m_loadedAssets[hasIndex]);
@@ -33,10 +32,16 @@ namespace ENGINE {
 				return nullptr;
 			}
 
+			bool Load(const std::filesystem::path& filepath);
+
+			MetaFileCache& GetMetaCache() { return loadedMetaFiles; }
 			std::vector<std::shared_ptr<Asset>>& GetLoadedAssets() { return m_loadedAssets; }
 
 		private:
+			bool LoadFromMeta(EUID euid);
+
 			std::vector<std::shared_ptr<Asset>> m_loadedAssets;
+			MetaFileCache loadedMetaFiles;
 		};
 	}
 }

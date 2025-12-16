@@ -2,7 +2,10 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>E:\My Files\DirectX\Dx11\Projects\Ez-Engine\bin\Debug-windows-x86_64\Ez-Editor\Ez-Editor.exe</FullPath>
+      <FullPath>E:\My Files\DirectX\Dx11\Projects\EZ-Framework\Ez-Engine\bin\Debug-windows-x86_64\Ez-EngineAPI\Ez-EngineAPI</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>E:\My Files\DirectX\Dx11\Projects\EZ-Framework\Ez-Engine\bin\Debug-windows-x86_64\Ez-Editor\Ez-Editor.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

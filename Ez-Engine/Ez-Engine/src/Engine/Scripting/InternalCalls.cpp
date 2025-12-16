@@ -1,4 +1,5 @@
 #include"Engine/Core/GameTime.h"
+#include"Engine/Core/KeyCodes.h"
 #include"Engine/Scripting/ScriptManager.h"
 
 namespace ENGINE {
@@ -6,20 +7,19 @@ namespace ENGINE {
 
 #pragma region Entity
 
-		extern "C" MonoString* GetEntityName(uint32_t id) {
-			ECS::GameEntity* entity = ScriptRuntime::GetRegistry()->GetGameEntity(id);
-			if (entity == nullptr) return mono_string_new(ScriptRuntime::GetAppDomain(), "");;
-			return mono_string_new(ScriptRuntime::GetAppDomain(), entity->name.c_str());
+		extern "C" MonoString* GetEntityName(uint64_t id) {
+			Ref<ECS::Entity> entity = ScriptRuntime::GetRegistry()->GetEntity(id);
+			return mono_string_new(ScriptRuntime::GetAppDomain(), entity->get().name.c_str());
 		}
 
-		extern "C" bool HasComponent(uint32_t id, MonoReflectionType* reflectionType) {
+		extern "C" bool HasComponent(uint64_t id, MonoReflectionType* reflectionType) {
 			MonoType* type = mono_reflection_type_get_type(reflectionType);
 			const char* typeName = mono_type_get_name(type);
 
 			return false;
 		}
 		
-		extern "C" void AddComponent(uint32_t id, MonoReflectionType* reflectionType) {
+		extern "C" void AddComponent(uint64_t id, MonoReflectionType* reflectionType) {
 			MonoType* type = mono_reflection_type_get_type(reflectionType);
 			MonoClass* klass = mono_class_from_mono_type(type);
 
@@ -40,7 +40,7 @@ namespace ENGINE {
 		struct Float3Interop {
 			float x, y, z;
 		};
-		extern "C" void transform_get_position(uint32_t entityId, Float3Interop* outPos) {
+		extern "C" void transform_get_position(uint64_t entityId, Float3Interop* outPos) {
 			if (!ScriptRuntime::GetRegistry()->Has<ECS::TransformComponent>(entityId)) return;
 
 			float3 position = ScriptRuntime::GetRegistry()->GetComponent<ECS::TransformComponent>(entityId).position;
@@ -50,7 +50,7 @@ namespace ENGINE {
 			outPos->z = position.z;
 		}
 
-		extern "C" void transform_set_position(uint32_t entityId, Float3Interop* position) {
+		extern "C" void transform_set_position(uint64_t entityId, Float3Interop* position) {
 			if (!ScriptRuntime::GetRegistry()->Has<ECS::TransformComponent>(entityId)) return;
 
 			ScriptRuntime::GetRegistry()->GetComponent<ECS::TransformComponent>(entityId).position = float3(position->x, position->y, position->z);
@@ -76,7 +76,7 @@ namespace ENGINE {
 		}
 
 		extern "C" bool is_key(int key) {
-			return ScriptRuntime::GetInput()->GetKey((Input::KeyCode)key);
+			return ScriptRuntime::GetInput()->GetKey((KeyCode)key);
 		}
 
 		extern "C" bool is_key_up(int key) {

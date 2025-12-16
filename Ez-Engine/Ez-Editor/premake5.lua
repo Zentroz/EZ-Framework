@@ -15,6 +15,7 @@ project "Ez-Editor"
     includedirs {
         "src",
         "%{wks.location}/Ez-Engine/src",
+        "%{wks.location}/Ez-EngineAPI/src",
         "%{wks.location}/Ez-Engine/externals/imgui/include",
         "%{wks.location}/Ez-Engine/externals/mono/include"
     }
@@ -25,6 +26,7 @@ project "Ez-Editor"
 
     links {
         "Ez-Engine",
+        "Ez-EngineAPI",
         "mono-2.0-sgen",
         "ImGui"
     }

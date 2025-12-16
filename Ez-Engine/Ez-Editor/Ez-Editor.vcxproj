@@ -57,7 +57,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;..\Ez-Engine\src;..\Ez-Engine\externals\imgui\include;..\Ez-Engine\externals\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Ez-Engine\src;..\Ez-EngineAPI\src;..\Ez-Engine\externals\imgui\include;..\Ez-Engine\externals\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -73,7 +73,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;..\Ez-Engine\src;..\Ez-Engine\externals\imgui\include;..\Ez-Engine\externals\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\Ez-Engine\src;..\Ez-EngineAPI\src;..\Ez-Engine\externals\imgui\include;..\Ez-Engine\externals\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -87,22 +87,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Editor\ComponentDrawFunctions.h" />
-    <ClInclude Include="src\Editor\Editor.h" />
+    <ClInclude Include="src\Editor\Core\EditorWinApi.h" />
+    <ClInclude Include="src\Editor\Core\FileDialog.h" />
     <ClInclude Include="src\Editor\EditorLayer.h" />
-    <ClInclude Include="src\Editor\FileDialog.h" />
-    <ClInclude Include="src\Editor\Game.h" />
-    <ClInclude Include="src\Editor\TestScene.h" />
+    <ClInclude Include="src\Editor\Panels\AssetBrowser.h" />
+    <ClInclude Include="src\Editor\Panels\InspectorPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Editor\ComponentDrawFunctions.cpp" />
-    <ClCompile Include="src\Editor\Editor.cpp" />
+    <ClCompile Include="src\Editor\Core\FileDialog.cpp" />
     <ClCompile Include="src\Editor\EditorLayer.cpp" />
-    <ClCompile Include="src\Editor\Game.cpp" />
+    <ClCompile Include="src\Editor\Panels\AssetBrowser.cpp" />
+    <ClCompile Include="src\Editor\Panels\InspectorPanel.cpp" />
     <ClCompile Include="src\Editor\WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ez-Engine\Ez-Engine.vcxproj">
       <Project>{27E4F71F-934E-AC96-DC8C-5D3C48368AEB}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Ez-EngineAPI\Ez-EngineAPI.vcxproj">
+      <Project>{E1E5B3AD-CD48-4352-76CE-7B0862100FD5}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Ez-Engine\externals\imgui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>

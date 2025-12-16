@@ -1,7 +1,5 @@
 #include"Resources.h"
 
-#include<WICTextureLoader.h>
-
 namespace ENGINE {
 	namespace RENDERER {
 
@@ -38,16 +36,13 @@ namespace ENGINE {
             ID3DBlob* psBlob = shaderAsset->psBlob;
 
             HRESULT hr;
-            hr = device->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), nullptr, &vertexShader);
             //CHECK_DXHR(hr, (std::string("Failed to create vertex shader. SHADER: ") + filePath).c_str());
-            if (FAILED(hr)) {
+            if (FAILED(hr = device->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), nullptr, &vertexShader))) {
                 return false;
             }
 
-
-            hr = device->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), nullptr, &pixelShader);
             //CHECK_DXHR(hr, (std::string("Failed to create pixel shader. SHADER: ") + filePath).c_str());
-            if (FAILED(hr)) {
+            if (FAILED(hr = device->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), nullptr, &pixelShader))) {
                 return false;
             }
 
@@ -59,12 +54,12 @@ namespace ENGINE {
                 { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
             };
 
-            hr = device->CreateInputLayout(layoutDesc, ARRAYSIZE(layoutDesc), vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), &inputLayout);
             //CHECK_DXHR(hr, "Failed to create input layout");
-            if (FAILED(hr)) return false;
+            if (FAILED(hr = device->CreateInputLayout(layoutDesc, ARRAYSIZE(layoutDesc), vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), &inputLayout)))
+                return false;
 
-            if (vsBlob)vsBlob->Release();
-            if (psBlob)psBlob->Release();
+            if (vsBlob) vsBlob->Release();
+            if (psBlob) psBlob->Release();
 
             return true;
         }
@@ -90,8 +85,9 @@ namespace ENGINE {
 
             std::shared_ptr<ASSET::Mesh> meshAsset = std::static_pointer_cast<ASSET::Mesh>(asset);
 
-            std::vector<ASSET::Mesh::Vertex> vertices = meshAsset->vertices;
-            std::vector<uint32_t> indices = meshAsset->indices;
+            std::vector<Vertex>& vertices = meshAsset->GetVertices();
+            std::vector<uint64_t>& indices = meshAsset->GetIndicies();
+            indexCount = meshAsset->GetIndexCount();
 
             // Vertex buffer
             D3D11_BUFFER_DESC vbDesc = {};
@@ -103,25 +99,21 @@ namespace ENGINE {
             D3D11_SUBRESOURCE_DATA initData = {};
             initData.pSysMem = vertices.data();
 
-            hr = device->CreateBuffer(&vbDesc, &initData, &vertexBuffer);
+            if (FAILED(hr = device->CreateBuffer(&vbDesc, &initData, &vertexBuffer))) return false;
             //CHECK_DXHR(hr, "Failed to create vertex buffer");
 
             // Index buffer
             D3D11_BUFFER_DESC ibDesc = {};
             ibDesc.Usage = D3D11_USAGE_DEFAULT;
-            ibDesc.ByteWidth = sizeof(uint32_t) * indices.size();
+            ibDesc.ByteWidth = sizeof(uint64_t) * indices.size();
             ibDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
             ibDesc.CPUAccessFlags = 0;
 
             D3D11_SUBRESOURCE_DATA iinitData = {};
             iinitData.pSysMem = indices.data();
 
-            hr = device->CreateBuffer(&ibDesc, &iinitData, &indexBuffer);
+            if (FAILED(hr = device->CreateBuffer(&ibDesc, &iinitData, &indexBuffer))) return false;
             //CHECK_DXHR(hr, "Failed to create index buffer");
-
-            if (FAILED(hr)) return false;
-
-            indexCount = meshAsset->indexCount;
 
             return true;
         }
@@ -135,13 +127,32 @@ namespace ENGINE {
                 return false;
             }
 
-            std::wstring path(asset->path.begin(), asset->path.end());
+            ASSET::Texture* tex = static_cast<ASSET::Texture*>(asset.get());
 
-            //ID3D11Resource* resource = nullptr;
-            //HRESULT hr = DirectX::CreateDDSTextureFromFile(device, std::wstring(path.begin(), path.end()).c_str(), nullptr, m_textureSRV.GetAddressOf());
-            HRESULT hr = DirectX::CreateWICTextureFromFile(device, std::wstring(path.begin(), path.end()).c_str(), nullptr, m_textureSRV.GetAddressOf());
+            D3D11_TEXTURE2D_DESC desc;
+            ZeroMemory(&desc, sizeof(desc));
+            desc.Width = tex->raw.width;
+            desc.Height = tex->raw.height;
+            desc.MipLevels = 1;
+            desc.ArraySize = 1;
+            desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+            desc.SampleDesc.Count = 1;
+            desc.Usage = D3D11_USAGE_DEFAULT;
+            desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 
-            if (FAILED(hr)) return false;
+            D3D11_SUBRESOURCE_DATA initData;
+            initData.pSysMem = tex->raw.data;
+            initData.SysMemPitch = tex->raw.width * 4;
+            initData.SysMemSlicePitch = 0;
+
+            ID3D11Texture2D* texture = nullptr;
+            
+            HRESULT hr;
+
+            if (FAILED(hr = device->CreateTexture2D(&desc, &initData, &texture))) return false;
+            if (FAILED(hr = device->CreateShaderResourceView(texture, nullptr, &m_textureSRV))) return false;
+
+            texture->Release();
 
             return true;
         }

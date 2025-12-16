@@ -13,9 +13,9 @@ using namespace ENGINE::ASSET;
 
 namespace EDITOR {
 	struct ComponentUIDrawInput {
-		Entity entity;
-		Registry* registry;
-		AssetManager* assetManager;
+		EUID entity;
+		Registry& registry;
+		AssetManager& assetManager;
 
 		// Input Buffers
 		char* textBuffer;

@@ -31,7 +31,7 @@ namespace ENGINE {
 			}*/
 
 			// Particle
-			for (Entity e : registry->view().Has<ECS::ParticleComponent>().List()) {
+			for (uint64_t e : registry->view().Has<ECS::ParticleComponent>().List()) {
 				ECS::ParticleComponent& particle = registry->GetComponent<ECS::ParticleComponent>(e);
 
 				particle.position += particle.veloctiy * particle.speed * GameTime::deltaTime;

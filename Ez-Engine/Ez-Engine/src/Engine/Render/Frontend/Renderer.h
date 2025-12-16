@@ -13,6 +13,7 @@
 #include"Engine/Render/Frontend/ResourceManager.h"
 #include"Engine/Render/Frontend/RenderPasses/SceneRenderPass.h"
 #include"Engine/Render/Frontend/RenderPasses/DebugRenderPass.h"
+#include"Engine/Render/Frontend/FrameDataBuffer.h"
 
 namespace ENGINE {
 	namespace RENDERER {
@@ -27,35 +28,26 @@ namespace ENGINE {
 
 			void Init(RendererInitData initData);
 			void Shutdown();
-			void CreateGlobalBuffer(ID3D11Device* device);
-			void SetGlobalBufferData();
+
 			void InitRender(RenderTarget* mainRenderTarget);
 			void Render();
 			void EndRender();
 
-			void BindLinearSampler();
+			void SetCamera(Camera* camera) { m_Camera = camera; }
 
 			void AddRenderPass(RenderPass* renderPass) { renderPasses.push_back(renderPass); }
-	
-			Camera* GetCamera() noexcept { return &camera; }
+
 		private:
-			RenderContext* ctx = nullptr;
 			PipelineStateManager pipelineStateManager;
-			Camera camera;
 			RenderPassContext renderPassContext;
+			FrameDataBuffer frameDataBuffer;
+
+			RenderContext* ctx = nullptr;
+			Camera* m_Camera = nullptr;
 
 			std::vector<RenderPass*> renderPasses = {};
 
 			Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
-
-			ID3D11Buffer* globalBuffer = nullptr;
-			struct GlobalConstantBuffer {
-				DirectX::XMMATRIX view;
-				DirectX::XMMATRIX projection;
-				float4 lightDirection;
-				float4 cameraPosition;
-				float4 timeData;
-			};
 		};
 
 	}

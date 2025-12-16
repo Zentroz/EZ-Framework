@@ -5,8 +5,8 @@
 
 namespace MATH {
 	const double PI = 3.14159265359;
-	const float Rad2Deg = 180 / PI;
-	const float Deg2Rad = PI / 180;
+	const float Rad2Deg = 180.0f / PI;
+	const float Deg2Rad = PI / 180.0f;
 
 	// # ------------------------------- Vectors -------------------------------------------- #
 
@@ -126,11 +126,11 @@ namespace MATH {
 		}
 
 		float3 normalize() {
-			float length = this->length();
+			double length = this->length();
 
 			if (length == 0) return float3(0, 0, 0);
 
-			return float3(this->x, this->y, this->z) / length;
+			return float3(this->x, this->y, this->z) / (float)length;
 		}
 
 	public:

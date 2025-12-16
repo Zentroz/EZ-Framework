@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="EzAPI">
+      <UniqueIdentifier>{3EA0230D-AAB4-4BBE-7336-EF1DDF0948EF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EzAPI\Core">
+      <UniqueIdentifier>{569B8088-4253-C2D5-AB5A-9B3197315DC6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Ez.h" />
+    <ClInclude Include="src\EzAPI\Core\GameObject.h">
+      <Filter>EzAPI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EzAPI\Core\Script.h">
+      <Filter>EzAPI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EzAPI\Math.h">
+      <Filter>EzAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EzAPI\ECS\Components.h" />
+  </ItemGroup>
+</Project>

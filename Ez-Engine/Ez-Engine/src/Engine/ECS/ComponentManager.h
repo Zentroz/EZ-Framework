@@ -8,6 +8,9 @@
 #include"Engine/Core/SparceSet.h"
 #include"Engine/ECS/ECSData.h"
 #include"Engine/ECS/ECSComponents.h"
+#include"Engine/Utils/EUID.h"
+
+using namespace ENGINE::UTILITY;
 
 namespace ENGINE {
 	namespace ECS {
@@ -15,27 +18,26 @@ namespace ENGINE {
 		class IComponentArray {
 		public:
 			virtual ~IComponentArray() = default;
-			virtual void RemoveData(Entity entity) = 0;
-			virtual bool Has(Entity entity) = 0;
-			virtual std::vector<Entity> GetAssignedEntities() = 0;
-			virtual uint32_t Size() = 0;
-			virtual IComponent* GetBase(Entity entity) = 0;
+			virtual void RemoveData(uint64_t entity) = 0;
+			virtual bool Has(uint64_t entity) = 0;
+			virtual std::vector<uint64_t> GetAssignedEntities() = 0;
+			virtual uint64_t Size() = 0;
 		};
 
 		template<typename T>
 		class ComponentArray : public IComponentArray {
 		public:
-			ComponentArray() : set(MAX_ENTITIES, 10) {}
+			ComponentArray() : set(100000, 10) {}
 
-			void InsertData(uint32_t entity, T component) {
+			void InsertData(uint64_t entity, T component) {
 				set.insert(entity, component);
 			}
 
-			void RemoveData(uint32_t entity) override {
+			void RemoveData(uint64_t entity) override {
 				set.remove(entity);
 			}
 
-			T& GetData(uint32_t entity) {
+			T& GetData(uint64_t entity) {
 				return set.get(entity);
 			}
 
@@ -47,31 +49,34 @@ namespace ENGINE {
 				set.clear();
 			}
 
-			IComponent* GetBase(Entity entity) override {
+			IComponent* GetBase(uint64_t entity) override {
 				return static_cast<IComponent*>(set.get_ptr(entity));
 			}
 
-			bool Has(Entity entity) override { return set.has(entity); }
+			bool Has(uint64_t entity) override { return set.has(entity); }
 
-			std::vector<Entity> GetAssignedEntities() override {
-				std::vector<Entity> entities;
+			std::vector<uint64_t> GetAssignedEntities() override {
+				std::vector<uint64_t> entities;
 
-				for (T component : set.getAll()) {
-					entities.push_back(component.entity);
+				for (T& component : set.getAll()) {
+					entities.push_back(component.entityID);
 				}
 
 				return entities;
 			}
 
-			uint32_t Size() override {
+			size_t Size() override {
 				return set.size;
 			}
 
 		private:
-			SparseSet<T> set;
+			
 		};
 
 		class ComponentManager {
+		private:
+			using EID = uint64_t;
+			using ComponentAddFn = void(*)(uint64_t, ComponentManager&);
 		public:
 			ComponentManager() = default;
 
@@ -87,7 +92,7 @@ namespace ENGINE {
 				return types;
 			}
 
-			bool HasComponent(Entity entity, ComponentType type) {
+			bool HasComponent(EID entity, ComponentType type) {
 				IComponentArray* componentArray = GetComponentArray(type);
 
 				return componentArray->Has(entity);
@@ -95,7 +100,7 @@ namespace ENGINE {
 
 			IComponentArray* GetComponentArray(ComponentType type) { return m_componentArrays[type]; }
 
-			void EntityDestroyed(Entity e) {
+			void EntityDestroyed(EID e) {
 				for (IComponentArray* arr : m_componentArrays) {
 					if (arr->Has(e)) {
 						arr->RemoveData(e);
@@ -112,7 +117,7 @@ namespace ENGINE {
 			ComponentType GetComponentType();
 
 			template<typename T>
-			void AddComponent(Entity entity, T component) {
+			void AddComponent(EID entity) {
 				ComponentType type = GetComponentType<T>();
 				ComponentArray<T>* componentArray = GetComponentArray<T>();
 				if (componentArray == nullptr) {
@@ -120,13 +125,14 @@ namespace ENGINE {
 					return;
 				}
 
-				component.entity = entity;
+				T component = T();
+				component.entityID = entity;
 
 				componentArray->InsertData(entity, component);
 			}
 
 			template<typename T>
-			void RemoveComponent(unsigned int entity) {
+			void RemoveComponent(EID entity) {
 				ComponentType type = GetComponentType<T>();
 				ComponentArray<IComponent>* componentArray = GetComponentArray(type);
 				if (componentArray == nullptr) {
@@ -138,7 +144,7 @@ namespace ENGINE {
 			}
 
 			template<typename T>
-			T& GetComponent(Entity entity) {
+			T& GetComponent(EID entity) {
 				ComponentArray<T>* componentArray = GetComponentArray<T>();
 
 				if (componentArray == nullptr) {
@@ -151,7 +157,7 @@ namespace ENGINE {
 			}
 
 			template<typename T>
-			bool HasComponent(uint32_t entity) {
+			bool HasComponent(EID entity) {
 				ComponentType type = GetComponentType<T>();
 
 				ComponentArray<T>* componentArray = GetComponentArray<T>();
@@ -173,9 +179,8 @@ namespace ENGINE {
 
 
 		private:
-			std::unordered_map<std::string, ComponentType> m_componentTypes{};
+			std::unordered_map<ComponentType, ComponentAddFn> m_AddFn{};
 			std::vector<IComponentArray*> m_componentArrays{};
-			ComponentType m_componentCount = 0;
 		};
 
 		template<typename T>

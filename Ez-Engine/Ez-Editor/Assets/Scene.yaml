@@ -1,0 +1,7 @@
+Scene: New Scene
+Entities:
+  - Entity: a0307ec255e460e1a346052baded2f8a
+    TransformComponent:
+      Translation: [1, 1, 1]
+      Rotation: [0, 0, 0, 1]
+      Scale: [1, 1, 1]

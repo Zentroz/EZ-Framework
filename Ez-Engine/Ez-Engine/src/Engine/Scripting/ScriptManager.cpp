@@ -148,7 +148,7 @@ namespace ENGINE {
             }
         }
 
-        void ScriptRuntime::CreateBehviourInstance(Entity entity, std::string key) {
+        void ScriptRuntime::CreateBehviourInstance(EUID entity, std::string key) {
             MonoClass* klass = behaviourKlasses[key];
             MonoObject* monoObj = mono_object_new(s_AppDomain, klass);
             mono_runtime_object_init(monoObj);
@@ -158,7 +158,7 @@ namespace ENGINE {
             m_scripts.back()->InvokeCreate();
         }
 
-        void ScriptRuntime::OnEntityCreatedCallback(Entity id) {
+        void ScriptRuntime::OnEntityCreatedCallback(EUID id) {
             MonoImage* image = mono_assembly_get_image(s_EngineAssembly);
 
             MonoObject* instance = mono_object_new(s_AppDomain, entityKlass);
@@ -166,7 +166,7 @@ namespace ENGINE {
 
             // Setting Entity ID
             MonoClassField* field = mono_class_get_field_from_name(entityKlass, "id");
-            uint32_t param =  id;
+            uint64_t param =  registry->GetEntity(id)->get().ruid;
             mono_field_set_value(instance, field, &param);
 
             // Setting transform
@@ -187,7 +187,7 @@ namespace ENGINE {
 
             entityInstancesCS[id] = instance;
         }
-        void ScriptRuntime::OnEntityDestroyedCallback(Entity id) {
+        void ScriptRuntime::OnEntityDestroyedCallback(EUID id) {
 
         }
 

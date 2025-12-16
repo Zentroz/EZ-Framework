@@ -5,22 +5,24 @@
 #include<unordered_map>
 #include<typeindex>
 
+#include<Engine/Utils/EUID.h>
+
 namespace ENGINE {
 	struct OnEntityCreated {
-		uint32_t entityId;
+		EUID entityId;
 	};
 
 	struct OnEntityDestroyed {
-		uint32_t entityId;
+		EUID entityId;
 	};
 
 	template<typename T>
 	struct ComponentAddedEvent {
-		uint32_t entity;
+		EUID entity;
 		T& component;
 		void* registry;
 
-		ComponentAddedEvent(uint32_t entity, T& component, void* registry) : entity(entity), component(component), registry(registry) {}
+		ComponentAddedEvent(EUID entity, T& component, void* registry) : entity(entity), component(component), registry(registry) {}
 	};
 
 	class EventBus {

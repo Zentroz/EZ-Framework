@@ -3,44 +3,72 @@
 namespace ENGINE {
 	namespace ECS {
 
-		EntityManager::EntityManager() : entitiesAlive(0) {}
-
-		Entity EntityManager::CreateEntity(const char* name) {
-			if (entitiesAlive >= MAX_ENTITIES) {
-				EXCEPTION("Maximum number of entities reached.");
-				return 0;
-			}
-
-			for (size_t i = 0; i < MAX_ENTITIES; i++)
-			{
-				if (!m_entities.test(i)) {
-					m_entities.set(i);
-
-					std::string eName = name == nullptr ? "Entity - " + std::to_string(i) : name;
-
-					m_entitiesData[i] = GameEntity(i, eName);
-
-					entitiesAlive++;
-					return i;
-				}
-			}
-
-			return 0;
+		EntityManager::EntityManager() : entitiesAlive(0) {
+			for (uint64_t i = 0; i < 5000; i++) m_RuntimeIDs.push(i);
 		}
 
-		void EntityManager::DestroyEntity(Entity entity) {
-			if (!m_entities.test(entity)) {
-				EXCEPTION("Trying to destroy an entity that does not exist.");
-				return;
+		EUID EntityManager::CreateEntity(std::string name) {
+			EUID uid;
+
+			if (IsEntityAlive(uid)) {
+				LOG_ERROR("Generated identical uid.");
+				return EUID(true);
 			}
 
-			m_entitiesData.erase(entity);
-			m_entities.reset(entity);
-			entitiesAlive--;
+			if (name.empty()) name = "New Entity";
+
+			m_entities[uid] = Entity(m_RuntimeIDs.pop(), uid, name);
+
+			entitiesAlive++;
+
+			if (m_RuntimeIDs.Size() == entitiesAlive) AddRuntimeIDs();
+
+			return uid;
 		}
 
-		bool EntityManager::IsEntityAlive(Entity entity) const {
-			return m_entities.test(entity);
+		void EntityManager::DestroyEntity(EUID uid) {
+			if (!IsEntityAlive(uid)) return;
+			m_RuntimeIDs.push(m_entities[uid].ruid);
+			m_entities.erase(uid);
+		}
+
+		bool EntityManager::IsEntityAlive(EUID uid) {
+			return m_entities.contains(uid);
+		}
+
+		Ref<Entity> EntityManager::GetEntity(EUID uid) {
+			if (uid.isNull()) return std::nullopt;
+			if (!IsEntityAlive(uid)) EXCEPTION("Can't return an entity that doesn't exist.");
+			return m_entities[uid];
+		}
+
+		Ref<Entity> EntityManager::GetEntity(uint64_t ruid) {
+			for (auto& [id, entity] : m_entities) {
+				return entity;
+			}
+
+			return std::nullopt;
+		}
+
+		std::vector<EUID> EntityManager::GetEntities() {
+			std::vector<EUID> entities;
+			entities.reserve(m_entities.size());
+
+			for (auto [id, entity] : m_entities) {
+				entities.push_back(id);
+			}
+
+			return entities;
+		}
+
+		size_t EntityManager::AliveCount() {
+			return entitiesAlive;
+		}
+
+		void EntityManager::AddRuntimeIDs() {
+			uint64_t start = m_RuntimeIDs.Size();
+			uint64_t end = m_RuntimeIDs.Size() + 5000;
+			for (uint64_t i = start; i < end; i++) m_RuntimeIDs.push(i);
 		}
 
 	}

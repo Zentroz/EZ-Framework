@@ -9,13 +9,13 @@
 template<typename T>
 class SparseSet {
 public:
-	uint32_t size;
+	uint64_t size;
 
-    SparseSet(uint32_t capacity, uint8_t paginationSize);
+    SparseSet(uint64_t capacity, uint8_t paginationSize);
 
-	T& get(uint32_t key) {
-		uint32_t elementIndex = key % paginationSize;
-		uint32_t pageIndex = key / paginationSize;
+	T& get(uint64_t key) {
+		uint64_t elementIndex = key % paginationSize;
+		uint64_t pageIndex = key / paginationSize;
 
 		if (!pages.contains(pageIndex) || pages[pageIndex][elementIndex] >= capacity) {
 			EXCEPTION(("There is no element for Key: " + std::to_string(key)).c_str());
@@ -23,9 +23,9 @@ public:
 
 		return dense[pages[pageIndex][elementIndex]];
 	}
-	T* get_ptr(uint32_t key) {
-		uint32_t elementIndex = key % paginationSize;
-		uint32_t pageIndex = key / paginationSize;
+	T* get_ptr(uint64_t key) {
+		uint64_t elementIndex = key % paginationSize;
+		uint64_t pageIndex = key / paginationSize;
 
 		if (!pages.contains(pageIndex) || pages[pageIndex][elementIndex] >= capacity) {
 			EXCEPTION(("There is no element for Key: " + std::to_string(key)).c_str());
@@ -34,16 +34,16 @@ public:
 		return &dense[pages[pageIndex][elementIndex]];
 	}
 
-	void insert(uint32_t key, T value) {
-		uint32_t elementIndex = key % paginationSize;
-		uint32_t pageIndex = key / paginationSize;
+	void insert(uint64_t key, T value) {
+		uint64_t elementIndex = key % paginationSize;
+		uint64_t pageIndex = key / paginationSize;
 
 		if (pages.contains(pageIndex)) {
 			auto insetPoint = pages[pageIndex].begin() + elementIndex;
 			pages[pageIndex][elementIndex] = size;
 		}
 		else {
-			pages[pageIndex] = std::vector<uint32_t>(paginationSize, capacity + 2);
+			pages[pageIndex] = std::vector<uint64_t>(paginationSize, capacity + 2);
 			pages[pageIndex][elementIndex] = size;
 		}
 
@@ -51,20 +51,20 @@ public:
 		size++;
 	}
 
-	void remove(uint32_t key) {
-		uint32_t elementIndex = key % paginationSize;
-		uint32_t pageIndex = key / paginationSize;
+	void remove(uint64_t key) {
+		uint64_t elementIndex = key % paginationSize;
+		uint64_t pageIndex = key / paginationSize;
 
 		if (!pages.contains(pageIndex)) {
 			return;
 		}
 
-		uint32_t backPage = 0;
-		uint32_t backIndex = 0;
+		uint64_t backPage = 0;
+		uint64_t backIndex = 0;
 
-		for (uint32_t i = 0; i < capacity / paginationSize; i++) {
+		for (uint64_t i = 0; i < capacity / paginationSize; i++) {
 			bool found = false;
-			for (uint32_t j = 0; j < paginationSize; j++) {
+			for (uint64_t j = 0; j < paginationSize; j++) {
 				if (pages[i][j] == dense.size() - 1) {
 					backPage = i;
 					backIndex = j;
@@ -88,11 +88,11 @@ public:
 		return dense;
 	}
 
-	std::vector<uint32_t> getAssignedIndex() {
-		std::vector<uint32_t> assignedIndex{};
+	std::vector<uint64_t> getAssignedIndex() {
+		std::vector<uint64_t> assignedIndex{};
 
 		for (auto& pair : pages) {
-			for (uint32_t i : pair.second) {
+			for (uint64_t i : pair.second) {
 				if (i < capacity) assignedIndex.push_back(i);
 			}
 		}
@@ -100,9 +100,9 @@ public:
 		return assignedIndex;
 	}
 
-	bool has(uint32_t key) {
-		uint32_t elementIndex = key % paginationSize;
-		uint32_t pageIndex = key / paginationSize;
+	bool has(uint64_t key) {
+		uint64_t elementIndex = key % paginationSize;
+		uint64_t pageIndex = key / paginationSize;
 
 		if (!pages.contains(pageIndex) || pages[pageIndex].size() == 0) return false;
 
@@ -116,14 +116,14 @@ public:
 	}
 
 private:
-	std::unordered_map<uint32_t, std::vector<uint32_t>> pages;
+	std::unordered_map<uint64_t, std::vector<uint64_t>> pages;
 	std::vector<T> dense;
     unsigned int capacity;
 	uint8_t paginationSize;
 };
 
 template<typename T>
-SparseSet<T>::SparseSet(uint32_t capacity, uint8_t paginationSize) : capacity(capacity), paginationSize(paginationSize) {	
+SparseSet<T>::SparseSet(uint64_t capacity, uint8_t paginationSize) : capacity(capacity), paginationSize(paginationSize) {	
 	size = 0;
 }
 

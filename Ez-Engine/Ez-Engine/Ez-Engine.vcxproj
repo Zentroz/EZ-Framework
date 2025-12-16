@@ -55,7 +55,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;externals\bullet\include;externals\mono\include;externals\imgui\include;..\packages\directxtk_uwp.2025.10.28.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;externals\bullet\include;externals\mono\include;externals\imgui\include;externals\yaml-cpp\include;externals\stb;..\Ez-EngineAPI\src;..\packages\directxtk_uwp.2025.10.28.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -73,7 +74,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;externals\bullet\include;externals\mono\include;externals\imgui\include;..\packages\directxtk_uwp.2025.10.28.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;externals\bullet\include;externals\mono\include;externals\imgui\include;externals\yaml-cpp\include;externals\stb;..\Ez-EngineAPI\src;..\packages\directxtk_uwp.2025.10.28.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -88,12 +90,19 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Engine\Assets\AssetDataTypes.h" />
+    <ClInclude Include="src\Engine\Assets\AssetImporter.h" />
+    <ClInclude Include="src\Engine\Assets\AssetLoader.h" />
     <ClInclude Include="src\Engine\Assets\AssetManager.h" />
     <ClInclude Include="src\Engine\Assets\Assets.h" />
+    <ClInclude Include="src\Engine\Assets\MetaFileCache.h" />
+    <ClInclude Include="src\Engine\Assets\RawAssets.h" />
+    <ClInclude Include="src\Engine\Core\Application.h" />
     <ClInclude Include="src\Engine\Core\ChiliWin.h" />
     <ClInclude Include="src\Engine\Core\ErrorHandler.h" />
     <ClInclude Include="src\Engine\Core\EventBus.h" />
     <ClInclude Include="src\Engine\Core\GameTime.h" />
+    <ClInclude Include="src\Engine\Core\KeyCodes.h" />
     <ClInclude Include="src\Engine\Core\Logger.h" />
     <ClInclude Include="src\Engine\Core\Math.h" />
     <ClInclude Include="src\Engine\Core\Random.h" />
@@ -106,17 +115,23 @@
     <ClInclude Include="src\Engine\ECS\SystemManager.h" />
     <ClInclude Include="src\Engine\ECS\View.h" />
     <ClInclude Include="src\Engine\Engine.h" />
+    <ClInclude Include="src\Engine\Events\ApplicationEvents.h" />
+    <ClInclude Include="src\Engine\Events\Event.h" />
+    <ClInclude Include="src\Engine\Events\InputEvents.h" />
     <ClInclude Include="src\Engine\Layer\ImGuiLayer.h" />
     <ClInclude Include="src\Engine\Layer\Layer.h" />
     <ClInclude Include="src\Engine\Layer\LayerStack.h" />
     <ClInclude Include="src\Engine\ParticleManager\ParticleManager.h" />
     <ClInclude Include="src\Engine\Physics\Collision.h" />
     <ClInclude Include="src\Engine\Physics\PhysicsManager.h" />
+    <ClInclude Include="src\Engine\Project\Project.h" />
     <ClInclude Include="src\Engine\Render\Backend\EngineBackend.h" />
     <ClInclude Include="src\Engine\Render\Backend\GraphicsDevice.h" />
     <ClInclude Include="src\Engine\Render\Backend\Input.h" />
     <ClInclude Include="src\Engine\Render\Backend\Window.h" />
     <ClInclude Include="src\Engine\Render\Frontend\Camera.h" />
+    <ClInclude Include="src\Engine\Render\Frontend\EditorCamera.h" />
+    <ClInclude Include="src\Engine\Render\Frontend\FrameDataBuffer.h" />
     <ClInclude Include="src\Engine\Render\Frontend\Material.h" />
     <ClInclude Include="src\Engine\Render\Frontend\RenderItem.h" />
     <ClInclude Include="src\Engine\Render\Frontend\RenderPass.h" />
@@ -129,12 +144,25 @@
     <ClInclude Include="src\Engine\Render\RenderContext.h" />
     <ClInclude Include="src\Engine\Render\RenderTarget.h" />
     <ClInclude Include="src\Engine\Render\Scene.h" />
+    <ClInclude Include="src\Engine\Scripting\Native\NativeScriptManager.h" />
     <ClInclude Include="src\Engine\Scripting\ScriptManager.h" />
     <ClInclude Include="src\Engine\Scripting\ScriptObject.h" />
+    <ClInclude Include="src\Engine\Serialization\AssetSerializer.h" />
+    <ClInclude Include="src\Engine\Serialization\BinarySerializer.h" />
+    <ClInclude Include="src\Engine\Serialization\MetaFile.h" />
+    <ClInclude Include="src\Engine\Serialization\MetaSerializer.h" />
+    <ClInclude Include="src\Engine\Serialization\Serializer.h" />
+    <ClInclude Include="src\Engine\Utils\EUID.h" />
+    <ClInclude Include="src\Engine\Utils\Freelist.h" />
+    <ClInclude Include="src\Engine\Utils\TypeAlias.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Engine\Assets\Asset.cpp" />
+    <ClCompile Include="src\Engine\Assets\AssetImporter.cpp" />
+    <ClCompile Include="src\Engine\Assets\AssetLoader.cpp" />
     <ClCompile Include="src\Engine\Assets\AssetManager.cpp" />
+    <ClCompile Include="src\Engine\Assets\MetaFileCache.cpp" />
+    <ClCompile Include="src\Engine\Core\Application.cpp" />
     <ClCompile Include="src\Engine\Core\EventBus.cpp" />
     <ClCompile Include="src\Engine\Core\GameTime.cpp" />
     <ClCompile Include="src\Engine\Core\Logger.cpp" />
@@ -146,11 +174,13 @@
     <ClCompile Include="src\Engine\Engine.cpp" />
     <ClCompile Include="src\Engine\Layer\ImGuiLayer.cpp" />
     <ClCompile Include="src\Engine\Physics\PhysicsManager.cpp" />
+    <ClCompile Include="src\Engine\Project\Project.cpp" />
     <ClCompile Include="src\Engine\Render\Backend\EngineBackend.cpp" />
     <ClCompile Include="src\Engine\Render\Backend\GraphicsDevice.cpp" />
     <ClCompile Include="src\Engine\Render\Backend\Input.cpp" />
     <ClCompile Include="src\Engine\Render\Backend\Window.cpp" />
     <ClCompile Include="src\Engine\Render\Frontend\Camera.cpp" />
+    <ClCompile Include="src\Engine\Render\Frontend\EditorCamera.cpp" />
     <ClCompile Include="src\Engine\Render\Frontend\Material.cpp" />
     <ClCompile Include="src\Engine\Render\Frontend\RenderPass.cpp" />
     <ClCompile Include="src\Engine\Render\Frontend\Renderer.cpp" />
@@ -158,13 +188,29 @@
     <ClCompile Include="src\Engine\Render\Frontend\Resources.cpp" />
     <ClCompile Include="src\Engine\Render\RenderContext.cpp" />
     <ClCompile Include="src\Engine\Render\RenderTarget.cpp" />
+    <ClCompile Include="src\Engine\Render\Scene.cpp" />
     <ClCompile Include="src\Engine\Scripting\InternalCalls.cpp" />
+    <ClCompile Include="src\Engine\Scripting\Native\API_Impls\ECS\TransformImpl.cpp" />
+    <ClCompile Include="src\Engine\Scripting\Native\API_Impls\GameObjectImpl.cpp" />
+    <ClCompile Include="src\Engine\Scripting\Native\NativeScriptManager.cpp" />
     <ClCompile Include="src\Engine\Scripting\ScriptManager.cpp" />
     <ClCompile Include="src\Engine\Scripting\ScriptObject.cpp" />
+    <ClCompile Include="src\Engine\Serialization\AssetSerializer.cpp" />
+    <ClCompile Include="src\Engine\Serialization\BinarySerializer.cpp" />
+    <ClCompile Include="src\Engine\Serialization\MetaSerializer.cpp" />
+    <ClCompile Include="src\Engine\Serialization\ProjectSerialization.cpp" />
+    <ClCompile Include="src\Engine\Serialization\SceneSerializer.cpp" />
+    <ClCompile Include="src\Engine\Utils\EUID.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\imgui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
+    <ProjectReference Include="externals\yaml-cpp\yaml-cpp.vcxproj">
+      <Project>{88F1A057-74BE-FB62-9DD7-E90A890331F1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Ez-EngineAPI\Ez-EngineAPI.vcxproj">
+      <Project>{E1E5B3AD-CD48-4352-76CE-7B0862100FD5}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

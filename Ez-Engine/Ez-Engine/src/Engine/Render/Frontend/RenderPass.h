@@ -9,22 +9,22 @@
 #include"Engine/Render/Frontend/Camera.h"
 #include"Engine/Render/Frontend/ResourceManager.h"
 #include"Engine/Render/PipelineStateManager.h"
+#include"Engine/Render/Frontend/FrameDataBuffer.h"
 
 namespace ENGINE {
 	namespace RENDERER {
 
 		struct RenderPassContext {
-			Camera* camera = nullptr;
 			ECS::Registry* registry = nullptr;
 			RenderContext* ctx = nullptr;
 			ResourceManager* resources = nullptr;
 			ASSET::AssetManager* assets = nullptr;
 			PipelineStateManager* pipelineStates = nullptr;
-			ID3D11Buffer* globalBuffer = nullptr;
+			FrameDataBuffer* frameBuffer = nullptr;
 
 			RenderPassContext() = default;
-			RenderPassContext(Camera* camera, ECS::Registry* registry, RenderContext* ctx, ASSET::AssetManager* assets, ResourceManager* resources, PipelineStateManager* pipelineStates, ID3D11Buffer* globalBuffer)
-				: camera(camera), registry(registry), ctx(ctx), assets(assets), resources(resources), pipelineStates(pipelineStates), globalBuffer(globalBuffer) {
+			RenderPassContext(ECS::Registry* registry, RenderContext* ctx, ASSET::AssetManager* assets, ResourceManager* resources, PipelineStateManager* pipelineStates, FrameDataBuffer* frameBuffer)
+				: registry(registry), ctx(ctx), assets(assets), resources(resources), pipelineStates(pipelineStates), frameBuffer(frameBuffer) {
 			}
 		};
 

@@ -9,17 +9,21 @@
 namespace ENGINE {
 	class Scene {
 	public:
+		std::string sceneName;
+	public:
 		Scene(std::string sceneName) : sceneName(sceneName) {}
 
-		void SetRegistry(ECS::Registry* registry) { this->registry = registry; }
+		void SetRegistry(ECS::Registry* registry) { this->p_Registry = registry; }
+		ECS::Registry* GetRegistry() { return p_Registry; }
 
-		virtual void Setup() = 0;
+		EUID CreateEntity(std::string name);
+		void DestroyEntity(EUID entity);
 
-	protected:
-		ECS::Registry* registry;
+		const std::vector<EUID>& GetEntities() const { return m_Entities; }
 
 	private:
-		std::string sceneName = "";
+		std::vector<EUID> m_Entities;
+		ECS::Registry* p_Registry = nullptr;
 	};
 }
 

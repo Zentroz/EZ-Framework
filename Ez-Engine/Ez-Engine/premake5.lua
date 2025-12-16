@@ -16,6 +16,9 @@ project "Ez-Engine"
         "externals/bullet/include",
         "externals/mono/include",
         "externals/imgui/include",
+        "externals/yaml-cpp/include",
+        "externals/stb",
+        "%{wks.location}/Ez-EngineAPI/src",
         "%{wks.location}/packages/directxtk_uwp.2025.10.28.2/include"
     }
 
@@ -26,8 +29,12 @@ project "Ez-Engine"
 
     links {
         "mono-2.0-sgen",
-        "ImGui"
+        "ImGui",
+        "yaml-cpp",
+        "Ez-EngineAPI"
     }
+
+    defines { "YAML_CPP_STATIC_DEFINE" }
 
     filter "configurations:Debug"
         runtime "Debug"        -- MDd

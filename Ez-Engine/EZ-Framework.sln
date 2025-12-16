@@ -5,9 +5,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Externals", "Externals", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "Ez-Engine\externals\imgui\ImGui.vcxproj", "{C0FF640D-2C14-8DBE-F595-301E616989EF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yaml-cpp", "Ez-Engine\externals\yaml-cpp\yaml-cpp.vcxproj", "{88F1A057-74BE-FB62-9DD7-E90A890331F1}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ez-Editor", "Ez-Editor\Ez-Editor.vcxproj", "{D836441F-44A1-F895-8DDF-A93BF988D6EA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ez-Engine", "Ez-Engine\Ez-Engine.vcxproj", "{27E4F71F-934E-AC96-DC8C-5D3C48368AEB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ez-EngineAPI", "Ez-EngineAPI\Ez-EngineAPI.vcxproj", "{E1E5B3AD-CD48-4352-76CE-7B0862100FD5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameScripting", "GameScripting\GameScripting.vcxproj", "{529888C3-BE58-04FA-8793-4D77F31249D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +25,10 @@ Global
 		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Debug|x64.Build.0 = Debug|x64
 		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Release|x64.ActiveCfg = Release|x64
 		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Release|x64.Build.0 = Release|x64
+		{88F1A057-74BE-FB62-9DD7-E90A890331F1}.Debug|x64.ActiveCfg = Debug|x64
+		{88F1A057-74BE-FB62-9DD7-E90A890331F1}.Debug|x64.Build.0 = Debug|x64
+		{88F1A057-74BE-FB62-9DD7-E90A890331F1}.Release|x64.ActiveCfg = Release|x64
+		{88F1A057-74BE-FB62-9DD7-E90A890331F1}.Release|x64.Build.0 = Release|x64
 		{D836441F-44A1-F895-8DDF-A93BF988D6EA}.Debug|x64.ActiveCfg = Debug|x64
 		{D836441F-44A1-F895-8DDF-A93BF988D6EA}.Debug|x64.Build.0 = Debug|x64
 		{D836441F-44A1-F895-8DDF-A93BF988D6EA}.Release|x64.ActiveCfg = Release|x64
@@ -27,11 +37,20 @@ Global
 		{27E4F71F-934E-AC96-DC8C-5D3C48368AEB}.Debug|x64.Build.0 = Debug|x64
 		{27E4F71F-934E-AC96-DC8C-5D3C48368AEB}.Release|x64.ActiveCfg = Release|x64
 		{27E4F71F-934E-AC96-DC8C-5D3C48368AEB}.Release|x64.Build.0 = Release|x64
+		{E1E5B3AD-CD48-4352-76CE-7B0862100FD5}.Debug|x64.ActiveCfg = Debug|x64
+		{E1E5B3AD-CD48-4352-76CE-7B0862100FD5}.Debug|x64.Build.0 = Debug|x64
+		{E1E5B3AD-CD48-4352-76CE-7B0862100FD5}.Release|x64.ActiveCfg = Release|x64
+		{E1E5B3AD-CD48-4352-76CE-7B0862100FD5}.Release|x64.Build.0 = Release|x64
+		{529888C3-BE58-04FA-8793-4D77F31249D6}.Debug|x64.ActiveCfg = Debug|x64
+		{529888C3-BE58-04FA-8793-4D77F31249D6}.Debug|x64.Build.0 = Debug|x64
+		{529888C3-BE58-04FA-8793-4D77F31249D6}.Release|x64.ActiveCfg = Release|x64
+		{529888C3-BE58-04FA-8793-4D77F31249D6}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C0FF640D-2C14-8DBE-F595-301E616989EF} = {C2B28EB3-2E3E-FC77-374F-7F6CA3595878}
+		{88F1A057-74BE-FB62-9DD7-E90A890331F1} = {C2B28EB3-2E3E-FC77-374F-7F6CA3595878}
 	EndGlobalSection
 EndGlobal

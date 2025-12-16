@@ -5,7 +5,8 @@
 #include"Engine/Scripting/ScriptObject.h"
 
 #include"Engine/ECS/ECSData.h"	
-#include"Engine/Assets/Assets.h"/
+#include"Engine/Assets/Assets.h"
+#include"Engine/Utils/EUID.h"
 
 using namespace MATH;
 
@@ -21,8 +22,13 @@ class btStaticPlaneShape;
 namespace ENGINE {
 	namespace ECS {
 
+#define COMPONENT_TYPE_FN(type) static ComponentType GetStaticType() { return ComponentType::type; }\
+								virtual ComponentType GetType() const override { return GetStaticType(); }
+
 		struct IComponent {
-			Entity entity;
+			uint64_t entityID;
+			static ComponentType GetStaticType() { return ComponentType::Base; }
+			virtual ComponentType GetType() const { return GetStaticType(); }
 		};
 
 		struct TransformComponent : public IComponent {
@@ -34,25 +40,31 @@ namespace ENGINE {
 			TransformComponent(float3 position, float3 scale, quaternion rotation);
 
 			void AddPosition(float3 delta);
+
+			COMPONENT_TYPE_FN(Transform);
 		};
 
 		struct MeshComponent : public IComponent {
-			uint16_t assetId;
+			EUID assetId;
 			std::shared_ptr<ASSET::Asset> meshAsset = nullptr;
 
 			MeshComponent();
-			MeshComponent(uint16_t assetId);
+			MeshComponent(EUID assetId);
+
+			COMPONENT_TYPE_FN(Mesh);
 		};
 
 		struct MaterialComponent : public IComponent {
-			uint16_t shaderAssetId;
-			uint16_t textureAssetId;
+			EUID shaderAssetId;
+			EUID textureAssetId;
 			float4 baseColor;
 
 			MaterialComponent();
-			MaterialComponent(uint16_t shaderAssetId, uint16_t textureAssetId, float4 baseColor = float4::one());
+			MaterialComponent(EUID shaderAssetId, EUID textureAssetId, float4 baseColor = float4::one());
 
 			void SetFloat(std::string name, float value);
+
+			COMPONENT_TYPE_FN(Material);
 
 		private:
 			char shaderPathInput[256] = "";
@@ -110,6 +122,8 @@ namespace ENGINE {
 			ColliderData* data;
 
 			ColliderComponent(ColliderData* data);
+
+			COMPONENT_TYPE_FN(Collider);
 		};
 
 		struct RigidBodyComponent : public IComponent {
@@ -119,10 +133,10 @@ namespace ENGINE {
 			RigidBodyComponent(float mass = 1.0f);
 
 			void SetCollisionShape(ColliderComponent& collider);
-
 			void SetPosition(float3 position);
-
 			void SetRotation(quaternion rotation);
+
+			COMPONENT_TYPE_FN(Rigidbody);
 		};
 
 		struct KinematicBody : public IComponent {

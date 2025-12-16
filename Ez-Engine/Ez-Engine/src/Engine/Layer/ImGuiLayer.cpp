@@ -1,5 +1,6 @@
 #include"Engine/Engine.h"
 #include"Engine/Layer/ImGuiLayer.h"
+#include"Engine/Core/ErrorHandler.h"
 
 void ImGuiLayer::Setup() {
 	// Setup Dear ImGui context
@@ -11,10 +12,21 @@ void ImGuiLayer::Setup() {
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
 
 	// Setup Platform/Renderer backends
-	GraphicsDevice* graphics = ENGINE::Engine::Get().Backend()->GetGraphicDevice();
+	if (!ImGui_ImplWin32_Init(ENGINE::Engine::Get().Backend().GetHwnd())) {
+		EXCEPTION("Failed to initialize ImGui_ImplWin32");
+	}
 
-	ImGui_ImplWin32_Init(ENGINE::Engine::Get().Backend()->GetHwnd());
-	ImGui_ImplDX11_Init(graphics->GetDevice(), graphics->GetContext());
+	GraphicsDevice* graphics = ENGINE::Engine::Get().Backend().GetGraphicDevice();
+
+	if (!ImGui_ImplDX11_Init(graphics->GetDevice(), graphics->GetContext())) {
+		EXCEPTION("Failed to initialize ImGui_ImplDX11");
+	}
+}
+
+void ImGuiLayer::Destroy() {
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 }
 
 void ImGuiLayer::NewFrame() {

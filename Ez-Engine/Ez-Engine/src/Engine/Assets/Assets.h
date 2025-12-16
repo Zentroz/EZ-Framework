@@ -10,84 +10,89 @@
 #include<d3d11shader.h>
 #include<wrl/client.h>
 
-// Mesh
-#include <iostream>
-#include <fstream>
-#include <sstream>
-
 #include"Engine/Core/Math.h"
 #include"Engine/Core/Logger.h"
+#include"Engine/Utils/EUID.h"
+#include"Engine/Serialization/MetaFile.h"
+#include"Engine/Assets/RawAssets.h"
 
 using namespace MATH;
+									
 
 namespace ENGINE {
 	namespace ASSET {
 
 		enum AssetType { TEXTURE, SHADER, MESH, SCRIPT, UNKNOWN };
 
+
 		class Asset {
 		public:
-			uint16_t id;
-			std::string path;
-			std::string name;
+			EUID euid;
+			std::string assetPath;
 
 			Asset() = default;
 			virtual ~Asset() = default;
-			virtual bool LoadFromFile(std::string path) {
-				this->path = path;
 
-				size_t nameLength = 0;
+			bool IsLoaded() { return isLoaded; }
 
-				for (size_t i = path.length() - 1; i >= 0; i--) {
-					nameLength++;
-					char ch = path.at(i);
-					if (ch == '/' || ch == '\\') {
-						name = path.substr(i + 1, nameLength - 1);
-						break;
-					}
-				}
+			virtual void ApplyMetaData(MetaData* meta) {};
 
+			virtual AssetType GetType() = 0;
+			virtual bool Load() {
+				isLoaded = true;
 				return true;
 			}
 
-			virtual AssetType GetType() = 0;
+		private:
+			bool isLoaded = false;
 		};
 
 		class Mesh : public Asset {
 		public:
-			struct Vertex {
-				float3 position;
-				float3 normal;
-				float2 uv;
-			};
+			bool readWrite;
+			float scaleFactor = 1.0f;
 
+		public:
 			Mesh() = default;
-			~Mesh();
-			bool LoadFromFile(std::string path) override;
+			~Mesh() = default;
+
+			void ApplyMetaData(MetaData* meta) override;
+
 			AssetType GetType() override { return AssetType::MESH; }
+			bool Load() override;
 
-			std::vector<Vertex> vertices;
-			std::vector<uint32_t> indices;
+			std::vector<Vertex>& GetVertices() { return raw.vertices; };
+			std::vector<uint64_t>& GetIndicies() { return raw.indicies; };
+			uint64_t GetIndexCount() { return raw.indexCount; }
 
-			UINT indexCount;
+		private:
+			RawMesh raw;
 		};
 
 		class Shader : public Asset {
 		public:
-			Shader() = default;
-			~Shader();
-			bool LoadFromFile(std::string path) override;
-			AssetType GetType() override { return AssetType::SHADER; }
-
 			ID3DBlob* vsBlob = nullptr;
 			ID3DBlob* psBlob = nullptr;
+		public:
+			Shader() = default;
+			~Shader();
+
+			AssetType GetType() override { return AssetType::SHADER; }
+			bool Load() override;
 		};
 
 		class Texture : public Asset {
 		public:
+			TextureWrapMode wrapMode;
+			TextureFilterMode filterMode;
+			RawTexture raw;
+		public:
 			Texture() = default;
-			bool LoadFromFile(std::string path) override;
+
+			void ApplyMetaData(MetaData* meta) override;
+
 			AssetType GetType() override { return AssetType::TEXTURE; }
+			bool Load() override;
 		};
 	}
 }

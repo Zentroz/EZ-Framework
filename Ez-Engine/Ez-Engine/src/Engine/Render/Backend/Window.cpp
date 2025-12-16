@@ -1,4 +1,7 @@
 #include"Window.h"
+#include"Engine/Core/Application.h"
+#include"Engine/Events/InputEvents.h"
+#include"Engine/Events/ApplicationEvents.h"
 
 std::wstring widen(const char* str) {
     return std::wstring(str, str + strlen(str));
@@ -128,18 +131,26 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept {
     if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
         return true;
-    // (Your code process Win32 messages)
-    // (You should discard mouse/keyboard messages in your game/engine when io.WantCaptureMouse/io.WantCaptureKeyboard are set.)
 
     switch (msg)
     {
     case WM_KEYDOWN:
-		input.KeyDown(static_cast<unsigned char>(wParam));
+        {
+            KeyEvent keyEvent((KeyCode)wParam, KeyState::Pressed);
+            Application::Instance().OnEvent(keyEvent);
+        }
+		//input.KeyDown(static_cast<unsigned char>(wParam));
         break;
     case WM_KEYUP:
-		input.KeyUp(static_cast<unsigned char>(wParam));
+        {
+            KeyEvent keyEvent((KeyCode)wParam, KeyState::Released);
+            Application::Instance().OnEvent(keyEvent);
+        }
+		//input.KeyUp(static_cast<unsigned char>(wParam));
         break;
     case WM_CLOSE:
+        ApplicationQuit quitEvent;
+        Application::Instance().OnEvent(quitEvent);
 		PostQuitMessage(0);
         break;
     }

@@ -1,12 +1,16 @@
 #include"AssetManager.h"
+#include"Engine/Assets/AssetImporter.h"
 
 namespace ENGINE {
 	namespace ASSET {
-		bool AssetManager::HasAsset(std::string path, size_t& index) {
+
+		AssetManager::AssetManager() {}
+
+		bool AssetManager::HasAsset(EUID id, size_t& index) {
 			size_t i = 0;
 
 			for (auto asset : m_loadedAssets) {
-				if (asset->path == path) {
+				if (asset->euid == id) {
 					index = i;
 					return true;
 				}
@@ -17,99 +21,70 @@ namespace ENGINE {
 			return false;
 		}
 
-		bool AssetManager::HasAsset(uint16_t id, size_t& index) {
-			size_t i = 0;
-
-			for (auto asset : m_loadedAssets) {
-				if (asset->id == id) {
-					index = i;
-					return true;
-				}
-
-				i++;
-			}
-
-			return false;
-		}
-		uint16_t AssetManager::GetIdFromName(std::string name) {
-
-			for (auto asset : m_loadedAssets) {
-				if (asset->name == name) {
-					return asset->id;
-				}
-			}
-
-			return UINT16_MAX;
-		}
-
-		bool AssetManager::LoadAsset(std::string path) {
-			if (path.empty()) {
-				LOG_WARN("Path is empty.");
-				return false;
-			}
-
-			std::string extension;
-			size_t extLength = 0;
-
-			for (size_t i = path.length() - 1; i >= 0; i--) {
-				extLength++;
-				char ch = path.at(i);
-				if (ch == '.') {
-					extension = path.substr(i, extLength);
-					break;
-				}
-			}
-
-			size_t hasIndex = 0;
-
-			if (HasAsset(path, hasIndex)) {
-				LOG_WARN("Already has the asset.");
-				return true;
-			}
+		bool AssetManager::LoadFromMeta(EUID euid) {
+			MetaData* meta = loadedMetaFiles.Get(euid);
+			if (meta == nullptr) return false;
 
 			std::shared_ptr<Asset> asset;
 
-			if (extension == ".hlsl") {
-				asset = (std::shared_ptr<Asset>)std::make_shared<Shader>();
-			}
-			else if (extension == ".obj") {
-				asset = (std::shared_ptr<Asset>)std::make_shared<Mesh>();
-			}
-			else if (extension == ".png") {
-				asset = (std::shared_ptr<Asset>)std::make_shared<Texture>();
-			}
-			else {
-				LOG_WARN("Extension is not supported.");
-				return false;
+			MetaAssetType type = meta->GetType();
+
+			switch (type) {
+			case MetaAssetType::MetaMesh:
+				asset = std::make_shared<Mesh>();
+				break;
+			case MetaAssetType::MetaTexture:
+				asset = std::make_shared<Texture>();
+				break;
+			case MetaAssetType::MetaShader:
+				asset = std::make_shared<Shader>();
+				break;
 			}
 
-			if (!asset->LoadFromFile(path)) {
-				LOG_WARN("Failed to load asset.");
-				return false;
-			}
-
-			asset->id = m_loadedAssets.size();
+			asset->ApplyMetaData(meta);
 
 			m_loadedAssets.push_back(asset);
-
-			LOG_INFO("Asset loaded!");
-
 			return true;
 		}
 
-		AssetType AssetManager::GetAssetType(uint16_t id) {
+		AssetType AssetManager::GetAssetType(EUID id) {
 			std::shared_ptr<Asset> asset = GetAsset(id);
 			if (asset == nullptr) return UNKNOWN;
 			return asset->GetType();
 		}
 
-		std::shared_ptr<Asset> AssetManager::GetAsset(uint16_t id) {
+		std::shared_ptr<Asset> AssetManager::GetAsset(EUID id) {
+			// 1. has asset - return / load
 			size_t hasIndex = 0;
+
 			if (HasAsset(id, hasIndex)) {
+				return m_loadedAssets[hasIndex];
+			}
+
+			if (LoadFromMeta(id)) {
+				HasAsset(id, hasIndex);
 				return m_loadedAssets[hasIndex];
 			}
 
 			return nullptr;
 		}
+
+		bool AssetManager::Load(const fs::path& filepath) {
+			if (filepath.extension() == ".obj") {
+				MeshImporter importer;
+				auto meta = importer.Import(filepath);
+
+				loadedMetaFiles.Add(meta);
+			}
+			else if (filepath.extension() == ".png") {
+
+			}
+			else if (filepath.extension() == "hlsl") {
+
+			}
+
+			return true;
+		}
+
 	}
 }
